@@ -1,5 +1,6 @@
 #include<bits/stdc++.h>
 using namespace std;
+
 ///////////////////
 /////Recursion/////
 //Definition: when a function is call itself
@@ -45,3 +46,55 @@ int main(){
   return 0;
 }
 // return:24
+
+///////////////////////////
+/////Fibonacci Numbers/////
+// Sequence Fn: each number is the sum of the two preceding ones. 0 1 1 2 3 5 8 13 ... Assume the first two numbers 0 and 1 are fixed.
+// https://en.wikipedia.org/wiki/Fibonacci_number
+// This part, our goal is to find Fibonacci numbers
+// Equation: F(n)=F(n-1)+F(n-2)
+// If want to solve the bigger problem, we first come to the smaller problem
+
+#include <iostream>  //A header: processing directive, want to use object from this library.<iosteam> library to handle input and output
+using namespace std;  //std: standard, the cout is part of a collection of names called standard namespace
+
+int fib(int n){
+  ///Base Case:the first fixed numbers
+  if (n==0){
+    return 0;
+  }
+  if (n==1){
+    return 1;
+  }
+  ///Recursive Case
+  int smallerOutput1=fib(n-1);
+  int smallerOutput2=fib(n-2);
+  ///Calculation
+  return smallerOutput1+smallerOutput2;
+}
+int main(){      //declare the function called main, all C++programs should contain this to be executable
+  cout<< fib(6);
+  return(0);
+}
+//return:8
+
+///////////////
+/////Power/////
+// X^n = X*X^(n-1)
+// pow(x,n) = pow(x, n-1)* x
+
+int power(int x,int n){      //define the variable name with variable type declaration: int. It is a must for statically-typed language
+  ///Base case: X^0=1
+  if (n==0){
+    return 1;
+  }
+  ///Recursive Case
+  int smallOutput=power(x, n-1);
+  ///Calculation
+  return smallOutput*x;
+}
+int main(){
+  cout<<power(5,3);
+  return 0;
+}
+//return: 125
