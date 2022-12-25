@@ -98,3 +98,108 @@ int main(){
   return 0;
 }
 //return: 125
+
+
+///////////////////////
+/////Print Numbers/////
+// print(n): print numbers from 1 to n
+// print(n)=print(n-1)+n
+#include <iostream>
+using namespace std;
+
+void print(int n){  //special type void indicates: the function does not return a value.
+  ///Base Case
+  if(n==0){
+    return; //do not print anything, cuz we begin from 1
+  }
+  ///Recursive Case
+  print(n-1); //this will print 1,2,...,n-1
+  ///Calculation
+  cout<<n<<endl;
+  return;
+}
+int main(){
+  print(5);
+  return 0;
+}
+// return:
+// 1
+// 2
+// 3
+// 4
+// 5
+
+// The results show the order is an ascending. What about a descending order?
+void print2(int n){ 
+  ///Base Case
+  if(n==0){
+    return; //mandatory
+  }
+  
+  cout<<n<<endl;
+  print2(n-1); //print from n-1,n-2,...,1
+  return;
+}
+int main(){
+  print2(5);
+  return 0;
+}
+// return:
+// 5
+// 4
+// 3
+// 2
+// 1
+
+/////Additional Defintion--Void Pointer: void*
+  //If the pointer type is void, it is universal and can point to any variable that's not declared with the const or volatile keyword.Can point to a free function,or to a static member function, but not to a non-static member function. A void pointer has no associated data type with it. 
+  // Disadvantages: the data pointed to by them cannot be directly dereferenced. Hence,any address in a void pointer needs to be transformed into other pointer type that points to a concrete data type before being dereferenced.
+/////Part of Pointer Definition:
+// https://cplusplus.com/doc/tutorial/pointers/
+// Each variable lives at a particular address in C++, the first address is 0.
+// &: the address of operator. &x: the address of x variable, and must to be a number.
+// int *p: * specifies p is a pointer to an int, meaning that we can assign to p the address of int.
+// *: pointer dereferencing operator, to access memory via a pointer.
+// The * operator is the inverse of & operator.
+
+
+//////////////////////
+/////Count Digits/////
+// Function: count(n)=count(n/10)+1 ,n is nature number
+int count(int n){
+  ///Base case
+  if(n==0){
+    return 0;
+  }
+  ///Recursive Case
+  int smallAns=count(n/10);
+  ///Calculation
+  return smallAns+1;
+}
+int main(){
+  cout<<count(1865)<<endl;
+  return 0;
+}
+//return: 4;
+
+
+///////////////////////
+/////Sum of Digits/////
+//Add all digits of value n eg:n=12345 ⇒15
+//Function: sum(n)=sum(n/10)+ last_digit
+int sum(int n){
+  ///Base case
+  if (n==0){
+    return 0;
+  }
+  ///Recursive Case
+  int smallAns=sum(n/10);
+  ///Calculation:find out the last digit first
+  int last_digit = n%10; //%: modulus
+  return smallAns+last_digit;
+}
+int main(){
+  cout<<sum(123456789)<<endl;
+  return 0;
+}
+//return:45
