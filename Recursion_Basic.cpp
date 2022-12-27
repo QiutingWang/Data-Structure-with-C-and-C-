@@ -203,3 +203,97 @@ int main(){
   return 0;
 }
 //return:45
+
+
+////////////////////////
+/////Multiplication/////
+//m*n if we only use + or -
+//m*n=m+m+...+m for n times
+//Function: m*n=m*(n-1) + m
+#include <iostream>;
+using namespace std;
+
+int multiply(int m,int n){
+  ///Base Case
+  if (n==0){
+    return 0;
+  }
+  ///Recursive Case
+  int smallAns=multiply(m,n-1);
+  ///Calculation
+  return m+smallAns;
+}
+int main(){
+  cout<<multiply(3,5);
+  return 0;
+}
+//return:15
+
+
+//////////////////////
+/////Count Zeros/////
+//Count how many zeros in the presented number, if n≥0;
+//Function:countZeros(n)=countZeros(n/10),then check if (lastDigit=0)->smallAns+1; else ->smallAns.
+int countZeros(int n){
+  ///Base Case
+  if (n==0){
+  return 0;
+  }
+  ///Recursive Case
+  int smallAns=countZeros(n/10);
+  ///Calculation
+  int lastDigit= n%10;
+  if (lastDigit==0){
+    return smallAns+1;
+  } else{
+    return smallAns;
+  }
+}
+int main(){
+  cout<<countZeros(20000917); 
+  return 0;
+}
+//return: 4
+
+/////Additional Concepts: long type in C++
+// the long is a larger data type than int.(int:32bits, long:64bits) stored as numbers ranging in value from -2,147,483,648 to 2,147,483,647.  
+// Use & to declare the long type
+
+
+///////////////////////
+/////Geometric Sum/////
+// Example: given k=3, then we need to calculate 1+ 1/2 + 1/(2^2) + 1/(2^3).
+// References: https://www.mathsisfun.com/algebra/sequences-sums-geometric.html
+// In a Geometric Sequence each term is found by multiplying the previous term by a constant.
+// In general, the sequence is {a, ar, ar^2, ar^3, ...,ar^k }. r: common ratio, a: the first term
+// Function: GeoSum(k)= GeoSum(k-1) + power(r,k)
+int power(int x,int n){     
+  ///Base case: X^0=1
+  if (n==0){
+    return 1;
+  }
+  ///Recursive Case
+  int smallOutput=power(x, n-1);
+  ///Calculation
+  return smallOutput*x;
+}
+
+double geoSum(int k){
+  ///Base Case
+  if (k==0){
+    return 1;
+  }
+  ///Recursive Case
+  double smallAns=geoSum(k-1);
+  ///Calculation
+  return smallAns + 1.0/power(2,k); //use the function we defined at first
+}
+int main(){
+  cout<<geoSum(5);
+  return 0;
+}
+//return: 1.96875
+
+/////Additional Concepts: double type in C++
+// a versatile data type that can represent any numerical value in the compiler, including decimal values. It can contain numbers till 15 digits.
+// can be treated as one kind of float data type
