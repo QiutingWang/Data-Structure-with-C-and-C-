@@ -160,7 +160,7 @@ int main(){
   int a,b;
   cin>>a>>b;
 
-  cout<<"before swapping"<<endl;   // '' and " " are different is usage in C++
+  cout<<"before swapping"<<endl;   // '' and " " are different in usage in C++
   cout<<"a = "<<a<<endl;
   cout<<"b = "<<b<<endl;
 
