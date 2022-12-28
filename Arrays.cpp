@@ -189,7 +189,7 @@ int main(){
   int a,b;
   cin>>a>>b;
 
-  cout<<"before swapping"<<endl;   // '' and " " are different is usage in C++
+  cout<<"before swapping"<<endl;   // '' and " " are different in usage in C++
   cout<<"a = "<<a<<endl;
   cout<<"b = "<<b<<endl;
 
@@ -239,3 +239,84 @@ int main(){
 // after swapping
 // a = 6
 // b = 5
+
+
+////////////////////////////////
+/////Print Array in Reverse/////
+// For loop setting is the core
+int main(){
+  /// enter the size of array
+  int n;
+  cin>>n;
+  /// the array is initialized and given by keyboard
+  int a[n];
+  for (int i=0; i<n; i++){
+    cin>> a[i];
+  }
+  ///normal print(left2right)
+  for (int i=0; i<n; i++){
+    cout<<a[i]<<" "; //give the spaces to the printing results and present them in one line
+  }
+  cout<<endl;
+
+  ///reverse order(right2left)
+  for (int i=n-1; i>=0; i--){
+    cout<< a[i]<<" ";
+  }
+  return 0;
+}
+// return:
+// 5
+// 1 2 3 4 5
+// 1 2 3 4 5 
+// 5 4 3 2 1
+
+
+///////////////////////
+/////Reverse Array/////
+// use for loop, while loop, and swap to exchange the value inside the array
+int main(){
+  int n;
+  cin>>n;
+
+  int a[n];
+  for (int i=0; i<n; i++){
+    cin>>a[i];
+  }
+
+  /// Print
+  cout<<"Before reverse: "<<endl;
+  for(int i=0; i<n; i++){
+    cout<<a[i]<<" "; 
+  }
+  cout<<endl;
+
+  ///use while loop for swapping elements inside the array
+  int start=0;
+  int end= n-1;
+  while (start<=end){
+    swap(a[start], a[end]);
+    start++;
+    end--;
+  }
+
+  /// Print
+  cout<<"After reverse: "<<endl;
+  for(int i=0; i<n; i++){
+    cout<<a[i]<<" ";
+  }
+}
+// return:
+// 4
+// 6 4 7 9
+// Before reverse: 
+// 6 4 7 9 
+// After reverse: 
+// 9 7 4 6 
+
+/////While Loop:
+// The while loop loops through a block of code as long as a specified condition is true
+// Syntax: 
+// while (condition) {
+//   code block to be executed;
+// }
