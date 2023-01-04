@@ -9,9 +9,16 @@ class Student{
     Student(){                    // do the same work as the internal constructor was doing.
       cout<<"Constructor Called" <<endl;
     }
+
     ///parameterized constructor
     Student(int r){
       cout<<"Constructor2 Called"<<endl;
+      this->rollNumber=rollNumber;  //if there exist two different scope variables sharing the same name,then use this is mandatory.
+    }
+    Student(int a, int r){
+      cout<<"this "<<this<<endl;     //get the address
+      cout<<"Constructor3 Called"<<endl;
+      this->age=a; //using this->attributeName=value; is optional
       rollNumber=r;
     }
 
@@ -30,6 +37,11 @@ class Student{
         return;
       }
       age=a;
+    }
+
+    //destructor
+    ~ Student(){
+      cout<<"Destructor Called"<<endl;
     }
 };
 
