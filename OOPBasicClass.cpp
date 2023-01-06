@@ -57,3 +57,50 @@ class Student{
 // public: members are accessible from outside the class[anywhere]
 // private: members cannot be accessed (or viewed) from outside the class[inside] Default setting,if there is no declaration.
 // protected: members cannot be accessed from outside the class, however, they can be accessed in inherited classes. Related to "Inheritance" concept
+
+
+class Fraction{
+  private:
+    int numerator;
+    int denominator;
+
+  public:
+    ///create a parameterized constructor, force the users to give value of these two attributes
+    Fraction(int numerator, int denominator){
+      this->numerator = numerator;
+      this->denominator = denominator; //the attribute names are the same as the parameter names,use this->
+    }
+    void print(){
+      cout<<this->numerator<<"/"<<this->denominator<<endl; //optional to use this
+    }
+    void add(Fraction const &f2){       //reference variable avoids copy and const keyword
+      int lcm= this->denominator * f2.denominator; //optional to use this. f1 is stored in this
+      int x=lcm/this->denominator;
+      int y=lcm/f2.denominator;
+      int num=x*this->numerator + y*f2.numerator;
+      //store the result in f1, f1=f1+f2
+      this->numerator=num;
+      this->denominator=lcm; 
+
+      simplify(); //call the function,this stored f1
+    }
+    /// Simplify, inbuilt function GCD= __gcd(a,b);
+    // int c=__gcd(a,b);
+    void simplify(){
+      int gcd=1;
+      int j= min(this->numerator, this->denominator);
+      for (int i=1; i<=j; i++){
+        if (numerator%i==0 && denominator%i==0){
+          gcd=i;
+        }
+      }
+      this->numerator = this->numerator/gcd;
+      this->denominator= this->denominator/gcd;
+    }
+    void multiply(Fraction const &f2){
+      numerator=numerator * f2.numerator;
+      denominator=denominator * f2.denominator;
+
+      simplify();
+    }
+};
