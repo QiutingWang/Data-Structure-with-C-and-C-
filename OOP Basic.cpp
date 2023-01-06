@@ -310,3 +310,95 @@ int main(){
   Student s27=s23; //copy constructor will be called
   return 0;
 }
+
+
+////////////////////////
+/////Fraction Class/////LCM and GCD
+// both of the numerator and denominator are private, and the two object should not contain garbage values.
+/////add f1=f1+f2:
+// add two frictions to f1, updates f1 and f2 is remain unchanged, we do not create any new friction, the return type is void.
+// Calculation logic: (denominator1*numerator2+denominator2*numerator1)/(denominator1*denominator2); LCM=denominator1*denominator2
+
+/////Simplify the friction: 
+// find the highest common divisor(GCD), then both deno and num divided by GCD;
+int main(){
+  Fraction f1(10,2);
+  Fraction f2(15,4);
+
+  f1.add(f2);
+  f1.print();
+  f2.print();
+
+  f1.multiply(f2);
+  f1.print();
+  f2.print();
+
+  return 0;
+}
+// return:
+// 35/4
+// 15/4
+// 525/16  //because after addition, f1 comes to 35/4
+// 15/4
+/////Reference Variable
+// to avoid copy and reduce the use of memory. A "reference" to an existing variable with & operator.
+// Syntax: dataType &newVariable=oldVariable; 
+// the newVariable and oldVariable share the same memory.
+// However, we should avoid changing the value of newVariable directly, using equation, after using reference variable. newVariable can only read the data, instead of writing the data. oldVariable is able to read and write data.
+
+/////Const
+// Q: How to achieve the goal of changing value of newVariable?
+// A: use const keyword. Syntax: dataType const &newVariable=oldVariable;
+// references:https://www.geeksforgeeks.org/const-keyword-in-cpp/
+// const + method/variable/pointer variable/object of a class
+// can not assign value
+// Explicit value needed to be provided to the constant variable at the time of declaration of the constant variable. eg: const int var=5;
+///when a pointer variable point to the const value: syntax: const data_type* var_name=&old_variableName;
+///when a const pointer variable point to the value: syntax: data_type* const var_name=&old_variableName;
+///Constant method: syntax: const Class_Name Object_name;
+   //An object declared as const cannot be modified 
+
+/////Multiply
+// Calculation logic: f1=f1*f2;
+// f1←(nominator1*nominator2)/(denominator1*denominator2), then simplify it.
+
+
+//////////////////////////////
+/////Complex Number Class/////
+// references:Creating and Using Complex Numbers. https://stdcxx.apache.org/doc/stdlibug/20-2.html
+// real(): return the real part of the complex number
+// imag(): return the imaginary part 
+// abs(): return the absolute number of complex number
+// arg(): return the argument of complex number
+// polar(): constructs a complex number from magnitude and phase angle.
+  // real = magnitude*cosine(phase angle)
+  // imaginary = magnitude*sine(phase angle)
+// norm():norm(absolute value). Expression: z = x + iy. complex conjugate of z is defined as z'(z bar) = x – iy
+// conj(): The conjugate of a complex number (real,imag) is (real,-imag).
+// proj(): give the projection of the complex number
+
+// we set two parts--real and imaginary into private area
+int main(){
+  int real1, imaginary1, real2, imaginary2;
+  cin>>real1>>imaginary1;
+  cin>>real2>>imaginary2;
+
+  ComplexNumbers c1(real1, imaginary1);  //parameterized constructor
+  ComplexNumbers c2(real2, imaginary2);
+
+  int choice;
+  cin>>choice;
+
+  if (choice==1){
+    c1.plus(c2);  //plus():   c1←c1+c2, c2 remains unchanged, the type of plus() is void
+    c1.print();
+  }
+  else if(choice==2){
+    c1.multiply(c2);  //c1←c1*c2  Calculation: c1*c2=real+imaginary=(realc1*realc2-imaginaryc1*imaginaryc2)+(realc1*imaginaryc2+realc2*imaginaryc1)i
+    c1.print();
+  }else{
+    return 0;
+  }
+}
+
+
