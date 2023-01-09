@@ -65,4 +65,156 @@ public:
       }
 };
 
+class Fraction{
+  private:
+    int numerator;
+    int denominator;
 
+  public:
+    Fraction(){
+
+    }
+    Fraction(int numerator, int denominator){
+      this->numerator=numerator;
+      this->denominator=denominator;
+    }
+    int getNumerator() const{     //mark a function as a constant function, by adding 'const' keyword before {}
+      return numerator;
+    }
+    int getDenominator() const{
+      return denominator;
+    }
+    void setNumerator(int n){   //cannot be constant function, because it is used to change the attribute
+      numerator=n;
+    }
+    void setDenominator(int d){
+      denominator=d;
+    }
+    void print() const{              //can be set into constant function, owing to it only accesses the properties
+      cout<< this->numerator<<"/"<<denominator<<endl;
+    }
+    void simplify(){
+      int gcd=1;
+      int j=min(this->numerator, this->denominator);
+      for (int i; i<=j; i++){
+        if(this->numerator % i==0 && this->denominator % i==0){
+          gcd=i;
+        }
+      }
+      this->numerator=this->numerator/gcd;
+      this->denominator=this->denominator/gcd;
+    }
+    void add(Fraction const &f2){
+      int lcm=denominator* f2.denominator;
+      int x=lcm/denominator;
+      int y=lcm/f2.denominator;
+
+      int num=x*numerator +(y*f2.numerator);
+
+      numerator=num;
+      denominator=lcm;
+      
+      simplify();
+    }
+    void multiply(Fraction const &f2){
+      numerator =numerator* f2.numerator;
+      denominator=denominator* f2.denominator;
+
+      simplify();
+    }
+};
+
+
+
+class Student{
+    static int totalStudents; //intuition: each student cannot have different totalStudent quantity. It is a static member, being the same for all objects.This attribute belongs to the class.
+
+  public:
+    int rollNumber;     //once the object is created, only the non-static attributes are copied.
+    int age;
+
+    // If we create a new object, the value of totalStudents should add 1, with the help of constructor
+    Student(){         
+      totalStudents++;
+    }
+    int getRollNumber(){
+      return rollNumber;
+    }
+   static int getTotalStudents(){  //create a static function
+      return totalStudents;
+    }
+};
+int Student::totalStudents=0; //initialization static member outside the class
+
+
+
+class Fraction{
+  private:
+    int numerator;
+    int denominator;
+
+  public:
+    Fraction(){
+
+    }
+    Fraction(int numerator, int denominator){
+      this->numerator=numerator;
+      this->denominator=denominator;
+    }
+    int getNumerator() const{     //mark a function as a constant function, by adding 'const' keyword before {}
+      return numerator;
+    }
+    int getDenominator() const{
+      return denominator;
+    }
+    void setNumerator(int n){   //cannot be constant function, because it is used to change the attribute
+      numerator=n;
+    }
+    void setDenominator(int d){
+      denominator=d;
+    }
+    void print() const{              //can be set into constant function, owing to it only accesses the properties
+      cout<< this->numerator<<"/"<<denominator<<endl;
+    }
+    void simplify(){
+      int gcd=1;
+      int j=min(this->numerator, this->denominator);
+      for (int i; i<=j; i++){
+        if(this->numerator % i==0 && this->denominator % i==0){
+          gcd=i;
+        }
+      }
+      this->numerator=this->numerator/gcd;
+      this->denominator=this->denominator/gcd;
+    }
+    Fraction operator+(Fraction const &f2){
+      int lcm=denominator* f2.denominator;
+      int x=lcm/denominator;
+      int y=lcm/f2.denominator;
+
+      int num=x*numerator +(y*f2.numerator);
+
+      /*numerator=num;
+      denominator=lcm;*/
+
+      Fraction fNew(num, lcm); //parameterized constructor called 
+      fNew.simplify();
+      return fNew;
+    }
+    void multiply(Fraction const &f2){
+      numerator =numerator* f2.numerator;
+      denominator=denominator* f2.denominator;
+
+      simplify();
+    }
+    Fraction operator*(Fraction const &f2){
+      int n=numerator* f2.numerator;
+      int d=denominator* f2.denominator;
+      Fraction fNew(n,d);
+      fNew.simplify();
+      return fNew;
+    }
+    bool operator==(Fraction const &f2){
+      return (numerator==f2.numerator && denominator==f2.denominator);
+    }
+};
