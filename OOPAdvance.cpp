@@ -93,3 +93,127 @@ int main() {
 //     }
 // };
 
+
+///////////////////////////
+/////Constant Function/////
+//Feature: Those functions that are denied permission to change the values of the data member.
+//Syntax:
+// <return_type> <function_name>() const{
+         //function body
+// } For function definition within the class declaration.
+//For function declaration within a class. <return_type> <function_name>() const; 
+int main(){
+  Fraction f1(10,5);
+  Fraction f2(15,4);
+  ///Create a constant object f3, cannot change the property
+  Fraction const f3;   //default constructor not called, garbage value will be set, the complier prevent calling any normal function through const object, but constant function is allowed.
+  cout<<f3.getNumerator()<<" "<<f3.getDenominator();
+  /// Try to change the value of numerator
+  f3.setNumerator(10);  //get error in the line
+  return 0;
+}
+
+
+///////////////////////
+/////Static Member/////
+/// Syntax: static dataType attributeName;
+/// Features: 
+// declared with static keyword
+// Only one copy of that member is created for the entire class, not changing with objects.
+// only be initalized outside the class
+///Initialization and Assign the value of static attribute
+// dataType className :: staticAttributeName=value;      where :: is scope resolution operator
+///Update the static attribute: take the help of constructor
+int main(){
+  Student s1;
+  /*
+  cout<<s1.rollNumber<<" "<<s1.age<<endl; //default constructor called, containing garbage value.
+  //The complier allows us to change the static attribute value with any object.
+  s1.totalStudents=20;  //inappropriate in logic to write s1.totalStudents, because static member belongs to class.
+  Student s2;
+  cout<<s2.totalStudents<<endl; 
+  */
+  Student s2,s3,s4,s5;
+
+  cout<<Student::totalStudents<<endl;
+  return 0;
+}
+// return:
+// 0 0
+// 20
+// 20
+
+// return: (update)
+// 5
+
+/// Create static function
+/// syntax:
+// static dataType functionName(arguments){
+//   function body
+// }
+///Feature: 
+// object doesn't allow to call the function. objectName.staticFunctionName() is wrong!
+// the static function belongs to class
+// Static function can only access the static data members and can call only static functions.
+// Static function cannot use 'this' keyword, because we do not call static function through objects.
+///Call the function, syntax:
+// class::staticFunctionName();
+
+
+//////////////////////////////
+/////Operator Overloading/////
+// reference:https://www.geeksforgeeks.org/operator-overloading-c/
+// does not change the attribute of current object
+///Defintion:
+// We can extend the functionality of the existing operators(eg:work for user-defined classes)
+// Example: f3=f1+f2 is wrong, because operator doesn't become effective to function operation. However, int c=a+b; is correct
+// our aim is to make f3=f1+f2 work.
+// create a new fraction f3, then it will return the new fraction if f1 and f2 both remain unchanged.
+// Change the functionName to 'operatorsymbol', such as change add to operator+.
+///Example: add function and operator+
+int main(){
+  Fraction f1(10,2);
+  Fraction f2(15,4);
+  //Fraction f3=f1.add(f2); //with add function
+  Faction f4=f1+f2; //with operator+ syntax
+  
+  f1.print();
+  f2.print();
+  // f3.print();
+  f4.print();
+
+  return 0;
+}
+//return: f1,f2 remain unchanged
+// 10/2
+// 15/4
+// 35/4
+
+///Example: multiply function and operator*
+int main(){
+  Fraction f1(10,2);
+  Fraction f2(15,4);
+  Fraction f3=f1*f2;
+  f1.print();
+  f2.print();
+  f3.print();
+  return 0;
+}
+// return:
+// 10/2
+// 15/4
+// 75/4
+
+///Example: Equal and Not Equal Operator
+int main(){
+  Fraction f1(10,2);
+  Fraction f2(15,4);
+  if (f1==f2){
+    cout<<"Equal"<<endl;
+  }else{
+    cout<<"Not Equal"<<endl;
+  }
+  return 0;
+}
+// return:
+// Not Equal
