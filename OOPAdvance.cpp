@@ -217,3 +217,87 @@ int main(){
 }
 // return:
 // Not Equal
+
+///Example: ++ operator:pre-increment&post-increment(Unary Operator)
+// Pre-increment: Syntax: ++ObjectName;
+// do not need to past any argument, unary operator calculates the value and store it in 'this'.
+int main(){
+  Fraction f1(10,2);
+  Fraction f2(15,4);
+
+  f1.print();
+  Fraction f3=++f1;
+  // ++f1;
+  f1.print();
+  f3.print();
+
+  return 0;
+}
+// return:
+// 10/2
+// 6/1
+// 6/1
+
+///With nested operators
+int main(){
+  Fraction f1(10,2);
+  Fraction f2(15,4);
+  f1.print();
+
+  Fraction f3=++(++f1);  //inside the bracket +=f1 store the value in f1 address, while outside ++ store the value in f3 in a new address.
+  // But we want the temporary memory that stores f3 never to be created. And function only making effects on the memory of f1.
+  // Solution: use Return by Reference, then new copy would not be created as return.
+    // https://www.geeksforgeeks.org/return-by-reference-in-c-with-examples/
+    // Syntax: dataType& functionName(arguments){functionBody};
+  f1.print();
+  f3.print();
+
+  return 0;
+}
+// return:   after use return by reference
+// 10/2        10/2
+// 6/1         7/1
+// 7/1         7/1
+
+///Example: Post-Increment Operator
+// nesting is not allowed for post-increment operator
+//Syntax: objectName++; the return comes to this, and do not create any argument
+// The differences between Pre- and Post-Increment Operator will come when we assign the values:
+  // For post-increment operator, first use then increment; While pre-, first do the increment then use;
+int main(){
+  Fraction f1(10,2);
+  Fraction f2(15,4);
+  Fraction f3=f1++;
+  f1.print();
+  f3.print();
+  return 0;
+}
+// return:
+// 6/1
+// 5/1
+
+///Example: += operator
+// eg: i+=j → i=i+j     If in function, F1=F1+F2; return a fraction by reference without system copy. Similar to add function we created before.
+
+//Nesting is allowed in this case
+int main(){
+  int i=5;
+  int j=3;
+  (i+=j)+=j;
+  cout<<i<<" "<<j<<endl;
+  return 0;
+}
+// return:
+// 11 3
+
+int main(){
+  Fraction f1(10,3);
+  Fraction f2(5,2);
+  f1+=f2;
+  f1.print();
+  f2.print();
+  return 0;
+}
+// return:
+// 35/6
+// 5/2
