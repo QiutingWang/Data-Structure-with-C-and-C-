@@ -217,4 +217,31 @@ class Fraction{
     bool operator==(Fraction const &f2){
       return (numerator==f2.numerator && denominator==f2.denominator);
     }
+    //Pre-increment 
+    Fraction& operator++(){
+      numerator= numerator + denominator;
+      simplify();
+      return *this; //*this means content, while this only includes the address
+    }
+    //Post-increment
+    Fraction operator++(int){ //pass int keyword as argument to differentiate with pre-increment
+      Fraction fNew(numerator,denominator);
+      numerator=numerator+denominator;
+      simplify();
+      fNew.simplify();
+      return fNew;
+    }
+    //+= operator
+    Fraction operator+=(Fraction const &f2){
+      int lcm=denominator* f2.denominator;
+      int x=lcm/denominator;
+      int y=lcm/f2.denominator;
+
+      int num=x*numerator +(y*f2.numerator);
+
+      numerator=num;
+      denominator=lcm;
+      simplify();
+      return *this;
+    }
 };
