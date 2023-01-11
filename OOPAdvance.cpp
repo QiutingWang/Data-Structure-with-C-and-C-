@@ -301,3 +301,44 @@ int main(){
 // return:
 // 35/6
 // 5/2
+
+
+/////////////////////////////
+/////Dynamic Array Class/////
+int main(){
+  DynamicArray d1; //default constructor called
+  d1.add(10);
+  d1.add(20);
+  d1.add(30);
+  d1.add(40);
+  d1.add(50);
+  d1.add(60);
+
+  cout<<d1.getElement(2)<<endl;
+
+  d1.print();
+  cout<<d1.getCapacity()<<endl;
+
+  DynamicArray d2(d1); //copy constructor called (shallow copy)
+  DynamicArray d3; //default constructor called
+  d3=d1;    //copy assignment operator called. In this case, it also creates a shallow copy.
+            // do the operator overloading, hence d1,d2,and d3 are independent with each other
+  d1.add(100,0);
+  d1.print(); 
+  d2.print();
+  d3,print();
+
+  DynamicArray d4(100); //parameterized constructor called
+  cout<<d4.getCapacity()<<endl;
+
+  return 0;
+}
+// return: S                     D                  operator overloading
+//                                                  30                //test getElement function
+// 10 20 30 40 50 60      10 20 30 40 50 60         10 20 30 40 50 60
+// 10                     10                        10
+// 100 20 30 40 50 60     100 20 30 40 50 60        100 20 30 40 50 60
+// 100 20 30 40 50 60     10 20 30 40 50 60         10 20 30 40 50 60 
+// 100 20 30 40 50 60     100 20 30 40 50 60        10 20 30 40 50 60 
+//                                                  100
+
