@@ -245,3 +245,86 @@ class Fraction{
       return *this;
     }
 };
+
+
+
+class DynamicArray{
+  int *data;
+  int nextIndex;
+  int capacity; //total size of the array
+
+  public:
+    DynamicArray(){
+      data=new int[5];
+      nextIndex=0;
+      capacity=5;
+    }
+    DynamicArray(int c){     //users can defined arrays with the size they want
+      data=new int[c];
+      nextIndex=0;
+      capacity=c;
+    }
+    DynamicArray(DynamicArray const &d){
+      this->nextIndex=d.nextIndex;
+      this->capacity=d.capacity;
+      // this->data=d.data;      //shallow copy
+      ///Create a deep copy
+      this->data=new int[d.capacity]; //create a new array
+      for (int i=0;i<d.nextIndex; i++){
+        this->data[i]=d.data[i];
+      }
+    }
+    /// Operator Overloading
+    void operator=(DynamicArray const &d){    //inside code is the same as the above one
+       this->nextIndex=d.nextIndex;
+      this->capacity=d.capacity;
+      
+      this->data=new int[d.capacity]; 
+      for (int i=0;i<d.nextIndex; i++){
+        this->data[i]=d.data[i];
+      }
+    }
+    void add(int element){
+      if(nextIndex==capacity){     //create a new array with double size, new data=copy of old content+newly insert number
+      int *newData=new int[capacity*2];
+      for (int i=0;i<capacity;i++){
+        newData[i]=data[i];
+      }
+      delete []data; //delete the old data. If we don't do so, it will lead to memory leak.
+      data=newData;  //update the dataset and capacity to original names
+      capacity=capacity*2;
+      }
+      data[nextIndex]=element;
+      nextIndex++;
+    }
+    void add(int element,int i){  //insert an element @index i
+      if (i<nextIndex){
+        data[i]=element;
+      }else if(i==nextIndex){
+        add(element); //call the add function we created before
+      }else{
+        return ;
+      }
+    }
+    int getElement(int i) const{
+      if(i>=0 && i<nextIndex){    //inside the bracket, it sets the valid i conditions
+        return data[i];
+      }else{
+        return -1; //return the default value
+      }
+    }
+    void print() const{
+      for (int i=0; i<nextIndex; i++){
+        cout<<data[i]<<" ";
+      }
+      cout<<endl;
+    }
+    int getCapacity() const{
+      return capacity;
+    }
+};
+/////Memory Leak:
+// reference:https://www.geeksforgeeks.org/memory-leak-in-c-and-how-to-avoid-it/
+// This phenomena occurs when allocating memory by using new keyword and forgetting to deallocate the memory by using delete() function or delete[] operator to free an array of data values
+// Disadvantage: memory usage is satirically increasing, computational cost increases.
+
