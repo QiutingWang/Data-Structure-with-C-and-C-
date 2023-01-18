@@ -178,3 +178,132 @@ int main(){
 }
 // return:
 // Found
+
+
+////////////////////////////////
+/////First Index of Element/////
+// Traversing index from left to right
+int firstIndex(int a[], int n, int x, int i){
+  if(i==n){ //value not found
+    return -1;
+  }
+  if(a[i]==x){
+    return i;
+  }
+  return firstIndex(a,n,x,i+1); //moving ahead by i+1
+}
+
+int main(){
+  int a[]={1,2,3,4,5,2,7,9};
+  cout<<firstIndex(a,8,2,0)<<endl; //searching begins at index 0
+  return 0;
+}
+// return:
+// 1
+
+
+///////////////////////////////
+/////Last Index of Element/////
+// Method1: Traversing index from right to left
+int lastIndex(int a[], int n, int x, int i){
+  if(i==-1){ //when the value not found
+    return -1;
+  }
+   if(a[i]==x){
+    return i;
+  }
+  return lastIndex(a,n,x,i-1);
+}
+
+// Method2: Traversing uses variable n
+int lastIndex2(int a[], int n, int x){
+  if(n==0){ //when the value not found
+    return -1;
+  }
+   if(a[n-1]==x){  //the last index(expressed by n):n-1
+    return i;
+  }
+  return lastIndex2(a,n-1,x);
+}
+
+// Method3: Traversing index from left to right
+int lastIndex3(int a[], int n, int x, int i){
+  if(i==n){ //when the value not found
+    return -1;
+  }
+  int indexInRemainArr=lastIndex3(a,n,x,i+1); //call the equation,if i is not equal to n
+  if(indexInRemainArr==-1){  //if the value is not present in the remaining sub-array
+    if(a[i]==x){
+      return i;
+    }else{
+      return -1;
+    }
+  }else{
+    return indexInRemainArr;
+  }
+}
+
+int main(){
+  int a[]={1,2,3,4,5,2,7,9};
+  cout<<lastIndex(a,8,2,7)<<endl; //searching begins at the last index
+  /*cout<<lastIndex2(a,8,2)*/
+  // cout<<lastIndex3(a,8,2,0)<<endl;//searching begins at index 0
+  return 0;
+}
+// return:
+// 5
+
+
+///////////////////////////////////////
+/////Print All Position of Element/////
+// Traversing from left to right
+void printAllPos(int a[], int n, int x,int i){
+  if(i==n){
+    return; //stop
+  }
+  if(a[i]==x){
+    cout<<i<<" ";
+  }
+  printAllPos(a,n,x,i+1);
+}
+
+/////Count Occurrence of element(Based on the last problem)
+///Approach1: create a new variable to express counting
+void freq(int a[],int n,int x,int i, int &ans){
+  if(i==n){
+    return; 
+  }
+  if(a[i]==x){
+    ans++;
+  }
+  freq(a,n,x,i+1,ans);
+}
+
+///Approach2: use i accumulatedly
+int freq2(int a[],int n,int x,int i){
+  if(i==n){
+    return 0; 
+  }
+  if(a[i]==x){
+    return 1+freq2(a,n,x,i+1);
+  }else{
+    return 0+freq2(a,n,x,i+1);
+  }
+}
+
+int main(){
+  int a[]={1,2,3,4,5,2,7,9};
+  printAllPos(a,8,2,0);
+
+  int ans=0;
+  freq(a,8,2,0,ans);
+  cout<<ans<<endl;
+
+  cout<<freq2(a,8,2,0)<<endl;
+  return 0;
+}
+// return:
+// 1 5
+// 2
+// 2
+
