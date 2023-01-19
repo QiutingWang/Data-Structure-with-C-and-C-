@@ -307,3 +307,78 @@ int main(){
 // 2
 // 2
 
+
+///////////////////////////////////////
+/////Store All Position of Element/////
+/// store the index in the vector
+#include <vector>
+void storeAllPos(int a[], int n, int x,int i, vector<int> &ans){
+  if(i==n){
+    return; 
+  }
+  if(a[i]==x){
+    ans.push_back(i);
+  }
+  storeAllPos(a,n,x,i+1,ans);
+}
+
+int main(){
+  int a[]={1,2,3,4,5,2,7,9};
+  vector<int> v;
+  storeAllPos(a,8,2,0,v);
+  for(int i=0;i<v.size();i++){
+    cout<<v[i]<<" ";
+  }
+  return 0;
+}
+// return
+// 1 5
+
+/// Store the index in the array
+int storeAllPos2(int a[], int n, int x,int i, int output[], int j){ //count the occurrence and push into array
+  if(i==n){
+    return 0; 
+  }
+  if(a[i]==x){
+    output[j]=i; //insert the element at index j
+    return 1+storeAllPos2(a,n,x,i+1,output,j+1);
+  }
+  return 0+storeAllPos2(a,n,x,i+1,output,j);
+}
+
+int main(){
+  int a[]={1,2,3,4,5,2,7,9};
+  int output[10];
+  int freq3=storeAllPos2(a,8,2,0,output,0);
+
+  for(int i=0;i<freq3;i++){
+    cout<<output[i]<<" ";
+  }
+  return 0;
+}
+// return:
+// 1 5
+
+
+//////////////////////////
+/////Check Palindrome/////
+// Defintion of Palindrome: traversal the array from left to right or right to left are the same.
+// Logic: use start index and end index to express, which initially @0 and n-1 correspondingly
+bool checkPal(int a[],int start, int end){
+  if(start>end){ //the array is empty
+    return true;
+  }
+  if(a[start]==a[end]){
+    return checkPal(a,start+1,end-1); //call the function to check the array except the start and end positions
+  }else{
+    return false;
+  }
+}
+
+int main(){
+  int a[]={1,5,6,7,7,6,5,1};
+  cout<<checkPal(a,0,8);
+  return 0;
+}
+// return
+// 1(it is palindrome; if it returns 0, not palindrome.)
