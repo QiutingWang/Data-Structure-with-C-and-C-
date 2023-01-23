@@ -134,3 +134,208 @@ int main(){
 // FlowerBlom
 
 
+//////////////////////////////////////////
+/////Print All Subsequences of String/////
+// if we have an array with length=n, then we will have 2^n sequences of this array. Because for each character it has two choice: include or exclude.
+/// for each character, exclude: input.substr(1)
+  // .substr(position of the first character to be copied, length of the substring), the second parameter is optional, if it isn't declared, then we treat it covers to the end.
+/// include: output+input[0]
+
+///// Use String
+void printSubsequence(string input, string output){
+  if(input.length()==0){ //if the string is empty
+    cout<<output<<endl;
+    return;
+  }
+  // The order of write exclude and include codes is important for the printing results
+  printSubsequence(input.substr(1),output); //exclude. Namely, covers from the second element to the end.
+  printSubsequence(input.substr(1),output+input[0]); //include the first element
+}
+
+int main(){
+  string input;
+  cin>>input;
+  string output="";
+  printSubsequence(input,output);
+  return 0;
+}
+// return: the printing order we need to pay attention, the logic: binary tree
+// Rose
+//     // empty
+// e
+// s
+// se
+// o
+// oe
+// os
+// ose
+// R
+// Re
+// Rs
+// Rse
+// Ro
+// Roe
+// Ros
+// Rose
+
+///// Use Character array
+void printSubsequence2(char input[], char output[], int i){ //i is created for push the value
+  if(input[0]=='\0'){ 
+    output[i]='\0';
+    cout<<output<<endl;
+    return;
+  }
+  // This time we print the include case first
+  output[i]=input[0];//include
+  printSubsequence2(input+1,output,i+1); 
+  printSubsequence2(input+1,output,i); //exclude
+}
+
+int main(){
+  char input[100];
+  cin>>input;
+  char output[10];
+  printSubsequence2(input,output,0);
+  return 0;
+}
+// return:
+// Rose
+// Rose
+// Ros
+// Roe
+// Ro
+// Rse
+// Rs
+// Re
+// R
+// ose
+// os
+// oe
+// o
+// se
+// s
+// e
+// 
+
+
+//////////////////////////////////////////
+/////Store All Subsequences of String/////
+// Store them in a vector
+#include <vector>
+void printSubsequence(string input, string output,vector<string> &v){ //pass the vector by reference
+  if(input.length()==0){ 
+    v.push_back(output); //storing
+    return;
+  }
+  printSubsequence(input.substr(1),output,v); 
+  printSubsequence(input.substr(1),output+input[0],v); 
+}
+
+int main(){
+  string input;
+  cin>>input;
+  string output="";
+  vector<string> v;
+  printSubsequence(input,output,v);
+  for(int i=0;i<v.size();i++){
+    cout<<v[i]<<endl;
+  }
+  return 0;
+}
+// return:
+// Rose
+// 
+// e
+// s
+// se
+// o
+// oe
+// os
+// ose
+// R
+// Re
+// Rs
+// Rse
+// Ro
+// Roe
+// Ros
+// Rose
+
+
+///////////////////////////////////
+/////Convert String to Integer/////
+// logic:the first n-1 elements composing the smallAnswer, which multiply by 10 then plus the last character at index[n-1], which need to use `char-char=int` logic, converting character to integer.
+int length(char input[]){
+  if(input[0]=='\0'){
+    return 0;
+  }
+  return 1+length(input+1);
+}
+
+int convertStr2Int(char str[],int n){
+  if(n==0){ 
+    return 0;
+  }
+  int smallAns=convertStr2Int(str,n-1); //call the recursion
+  int lastDigit=str[n-1]-'0'; //calculations
+  int ans=smallAns*10+lastDigit;
+  return ans;
+}
+
+int main(){
+  char str[]="20230123"; //no more than 9 digit, for longer character, we need to use long data type.
+  int n=length(str);
+  int a=convertStr2Int(str,n); 
+  cout<<a<<endl;
+  return 0;
+}
+// return:
+// 20230123
+
+
+/////////////////////////////////////////
+/////Print All Permutation of String/////
+// the numbers of total permutation of a string=length!=length*(length-1)*(length-2)*...*1
+// Logic: We fix the first element and combine with others, then swap the first element to another one, treat it as the fixed element, repeat the process above.
+void printPermutation(char str[], int i){
+  if(str[i]=='\0'){
+    cout<<str<<endl;
+    return;
+  }
+  for(int j=i;str[j]!='\0';j++){ //j is the element need to be swapped at the right side of string
+    swap(str[i],str[j]);
+    printPermutation(str, i+1);
+    swap(str[i],str[j]); //swap back to the original for next swap and printing execute successfully
+  }
+}
+
+int main(){
+  char str[]="iris";
+  printPermutation(str,0);
+  return 0;
+}
+// return:
+// iris
+// irsi
+// iirs
+// iisr
+// isir
+// isri
+// riis
+// risi
+// riis
+// risi
+// rsii
+// rsii
+// iris
+// irsi
+// iirs
+// iisr
+// isir
+// isri
+// srii
+// srii
+// siri
+// siir
+// siir
+// siri
