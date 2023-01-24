@@ -339,3 +339,101 @@ int main(){
 // siir
 // siir
 // siri
+
+
+///////////////////////////
+/////Staircase Problem/////
+// How many number of ways to reach up to N from 0?
+// Recursion application: f(N)=f(N-1)+f(N-2)+f(N-3)+...+f(0). Here, for instance, f(0)=1, f(1)=1,f(2)=2,f(3)=4
+int countWays(int n){
+  if(n==0||n==1){
+    return 1;
+  }
+  /*
+  if(n==2){ //also treated as base case
+    return 2;
+  }*/
+  // Another method:
+  if(n<0){ //invalid
+    return 0;
+  }
+  return countWays(n-1)+countWays(n-2)+countWays(n-3);
+}
+
+int main(){
+  int n;
+  cin>>n;
+  cout<<countWays(n)<<endl;
+  return 0;
+}
+// return:
+// 5
+// 13
+
+
+////////////////////////
+/////Tower of Hanoi/////
+// Game Explanation reference: https://zh.wikipedia.org/zh-cn/%E6%B1%89%E8%AF%BA%E5%A1%94
+// The total steps=2^n -1 →change to power problem we have ever solved in Recursion_Basic part
+// OR: f(N)=f(N-1)+1+f(N-1)=Steps(A→B)+1[Steps(A→C)]+Steps(B→C), where A: Source; B: Helper; C:Destination
+int ToH(int n){
+  if(n==0){
+    return 0;
+  }
+  return ToH(n-1)+1+ToH(n-1);
+}
+
+int main(){
+  int n;
+  cin>>n;
+  cout<<ToH(n)<<endl;
+  return 0;
+}
+// return:
+// 6
+// 63
+
+
+///////////////////////////////////////
+/////Print Steps in Tower of Hanoi/////
+int ToH(int n){
+  if(n==0){
+    return 0;
+  }
+  return ToH(n-1)+1+ToH(n-1);
+}
+
+void printSteps(int n, char source, char destination, char helper){
+  if(n==0){
+    return;
+  }
+  printSteps(n-1,source,helper,destination);
+  cout<<"Moving disk"<<n<<" from "<< source <<" to "<<destination<<endl;
+  printSteps(n-1,helper,destination,source);
+}
+
+int main(){
+  int n;
+  cin>>n;
+  cout<<ToH(n)<<endl;
+  printSteps(n,'A','C','B');
+  return 0;
+}
+// return:
+// 4
+// 15
+// Moving disk1 from A to B
+// Moving disk2 from A to C
+// Moving disk1 from B to C
+// Moving disk3 from A to B
+// Moving disk1 from C to A
+// Moving disk2 from C to B
+// Moving disk1 from A to B
+// Moving disk4 from A to C
+// Moving disk1 from B to C
+// Moving disk2 from B to A
+// Moving disk1 from C to A
+// Moving disk3 from B to C
+// Moving disk1 from A to B
+// Moving disk2 from A to C
+// Moving disk1 from B to C
