@@ -130,6 +130,80 @@ int main(){
 // Θ(), describes the exact bound of the complexity.
 // o(), describes the upper bound excluding the exact bound.
 
+// Important Summarized Reference: https://www.bigocheatsheet.com/
+
+/////Linear Search Time Complexity
+// Best case: the key value presented at the first element, only comparison is needed. T=O(1)
+// Worst case: element is not present in the array, with comparison and moving forward for every element using k time length. After ignoring constant k, T=O(n)
+// Since we only consider the worst case, T=O(1) is abandoned. 
+
+/////Selection Sort Time Complexity
+//Working Logic: repeatedly selecting the smallest element from the unsorted portion of the list and moving it to the sorted portion. 
+// T=kn+k(n-1)+k(n-2)+...+1=kn^2/2+kn/2=O(n^2), which is the same between the best and worst case.
+
+/////Binary Search Time Complexity
+// T=O(log n),using recursion, which is faster than linear search
+
+/////Merge Sort Time Complexity
+// T(N)=kN/2+kN/2+T(N/2)+T(N/2)+kN
+  // KN/2:copy the first half elements to a new array
+  // KN/2:copy the second half of elements to another new array
+  // T(N/2):call the recursion 
+  // kN:merge two sorted sub-arrays together with index i and j(comparison and arrange elements)
+// T(N)=2T(N/2)+KN; T(N/2)=2(T/4)+KN/2; T(N/4)=2(T/8)+KN/4;...T(1)=k→T=knlogn, T=O(nlogn)
+// Hence, merge sort is much faster than bubble sort/selection sort/insertion sort[T=O(n^2)].
+
+/////Fibonacci Time Complexity
+// T(n)=k+T(n-1)+T(n-2), which is tough to solve, and where k is basic constant work case time complexity
+// We use `in-depth recursion` to solve the time complexity, the processes are listed below:
+// n->n-1, n->n-2            //1 function call
+/// n-1->n-2, n-1->n-3       //in this case, n-1 is the node, function call, each node is doing k amount of work, checking the basic case and calling the equation. 2 function call
+/// n-2->n-3, n-2->n-4
+//// n-2->n-3, n-2->n-4     //4 function call
+//// n-3->n-4, n-3->n-5
+//// n-3->n-4, n-3->n-5
+//// n-4->n-5, n-4->n-6
+// .........
+// 1                       //finally evolute to the basic case
+// PS: the length of evolution chain of left side=N, while, the length of evolution chain of right side=N/2
+// Hence, T(N)=k* total number of node=k* total number of function call. 
+// Namely, for the worst case, sum up 2^0+2^1+2^2+...+2^N=2^(N+1)-1
+// T=k*(2*2^n)=O(2^N);(exponential), the running effect is horrible.
 
 
+///////////////////////////////////
+/////Space Complexity Analysis/////
+// reference:https://www.simplilearn.com/tutorials/data-structure-tutorial/time-and-space-complexity#what_is_space_complexity
+// Auxiliary Complexity: extra space or temporary space used by an algorithm.
+// Space complexity: total space taken by the algorithm in terms of the `input size`.Or the `max` space required at any point of time during the executing program.Sometimes we need to consider `Recursion`.
+// Space complexity includes input size and auxiliary.
+
+/////Bubble Sort Space Complexity
+// For auxiliary space, without considering input array, S=O(1),taking constant amount of space.
+
+/////Binary Search Space Complexity
+// For interactive case, we create midpoint,end, start, these few variables only,S=O(1)
+// Recursive Case: element size taken consideration: N, N/2, N/4...,1. 
+  // For each function, it requires k(constant amount) space.
+  // At the final point,when recursion size comes to 1, the required amount of space up to the maximum.
+  // Total number of function in call stack: logN
+  // S=k*(logN)->S=O(logN)
+
+/////Merge Sort Space Complexity
+// divide array into two sub-array, then copy them, after recursion, merge them together
+// N-> N/2 and N/2
+/// N/2->N/4 and N/4
+/// N/2->N/4 and N/4
+//// N/4->N/8 and N/8
+//// N/4->N/8 and N/8
+//// N/4->N/8 and N/8
+//// N/4->N/8 and N/8
+// ......
+// 1
+// Call stack: N N/2 N/4 N/8....1, they are maximum number of function call in programming process, in total logN terms
+// S=N+N/2+N/4...+k=O(N)
+
+/////Fibonacci Space Complexity
+// Recursion Call stack: max number of call function occur =N, space requires by each function is constant k
+// S=k*N=O(N)
 
