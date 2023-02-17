@@ -365,3 +365,112 @@ node* insertAtIthPos(node *head,int i,int data){
   }
   return copyHead; //if the value of index is invalid
 }
+
+
+/////////////////////////
+/////Delete ith Node/////
+// Process:
+// reach at the ith node position→ make the new connection between (i-1)th and (i+1)th node, the connection between i-1 and i is broken automatically→ the address of original ith node is lost, which is similar to delete ith node→ shift the right side nodes left with 1 position
+// Special cases need to be considered: 1. i<0, invalid   2. i=0, we need to delete head    3. i>=length, not exists
+node* deleteIthNode(node *head, int i){
+  if(i<0){
+    return head;
+  }
+  if(i==0 && head!=NULL){ //at the first node position
+    return head->next; //return the address of the second node
+  }
+  node* current=head;
+  int count=1;
+  while(count<=i-1 && current!=NULL){ //count means the steps of jump in linked list
+    current=current->next;
+    count++;
+  }
+  if(current!=NULL && current->next!=NULL){ //we need to check both i-1 and i are exist in linked list(cuz at the special case, i-1 will move at the last position of linked list)
+    current->next=current->next->next; //make the new connection between  i-1 and i+1th node
+    return head;
+  }
+  return head;
+}
+
+int main(){
+  node *head=takeInput();
+  int i;
+  cin>>i;
+  head=deleteIthNode(head,i); //update the head
+  print(head); //use head function we have defined   
+  return 0;
+}
+// return:
+// 10 98 235 66 84 34 -1
+// 3
+// 10-> 98-> 235-> 84-> 34-> NULL
+
+// test for delete the first node
+// 10 98 235 66 84 34 -1
+// 0
+// 98-> 235-> 66-> 84-> 34-> NULL
+
+// test for delete the last node
+// 10 98 235 66 84 34 -1
+// 5
+// 10-> 98-> 235-> 66-> 84-> NULL
+
+// test for invalid value
+// 10 98 235 66 84 34 -1
+// 6
+// 10-> 98-> 235-> 66-> 84-> 34-> NULL
+
+// test for an empty linked list
+// -1
+// 5
+// NULL
+
+// Problem: memory leak, wasting memory of the node we want to delete, but actually we only lose its address.
+
+
+///////////////////////////////////////////////////////
+/////Solution without Memory Leak: Delete ith Node/////
+// Process: 
+// 1.store the address of i+1 node(next node)
+// 2.make the node isolate, by setting the address of next node=NULL
+// 3.delete the node, by `delete` keyword
+node* deleteIthNode2(node *head, int i){
+  if(i<0){
+    return head;
+  }
+  if(i==0 && head!=NULL){ //at the first node position
+    node* newHead=head->next; //store the next node's address
+    head->next=NULL; //isolation
+    delete head;
+    return newHead;
+  }
+  node* current=head;
+  int count=1;
+  while(count<=i-1 && current!=NULL){ 
+    current=current->next;
+    count++;
+  }
+  if(current!=NULL && current->next!=NULL){ 
+    node *temp=current->next; //store the node which we want to delete
+    current->next=current->next->next;
+    temp->next=NULL; //isolate
+    delete temp;
+    return head;
+  }
+  return head;
+}
+
+int main(){
+  node *head=takeInput();
+  int i;
+  cin>>i;
+  head=deleteIthNode2(head,i); //update the head
+  print(head); //use head function we have defined   
+  return 0;
+}
+// return:
+// 10 98 235 66 84 34 -1
+// 5
+// 10-> 98-> 235-> 66-> 84-> NULL
+
+// T=O(i)
