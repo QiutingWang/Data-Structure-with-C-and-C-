@@ -189,3 +189,162 @@ public:
         return slow; //odd number of nodes
     }
 };
+
+
+///////////////////////////////
+/////Reverse a Linked List/////
+///Process:
+// set 3 pointers in adjacent orderly: previous, current, n(next of current). Namely,NodeA<-NodeB(Previous)  NodeC(Current)->NodeD(n)->NodeE->...->NULL. Treat current pointer's position as head initially.
+// Save n node
+// break the link between current and node n
+// create the link between previous and current
+// move the previous pointer's position to original current pointer's position
+// move the current's position to original n pointer's position
+// iterate the process above use a loop until the current pointer first reaches at NULL.
+// Finally, the head becomes at previous pointer's position.
+
+/// LeetCode.206 https://leetcode.com/problems/reverse-linked-list/
+class Solution {
+public:
+    ListNode* reverseList(ListNode* head) {
+      //initialization
+        ListNode *current=head;
+        ListNode *previous=NULL;
+        
+        while(current!=NULL){
+            ListNode *n=current->next; //save the next node n
+            current->next=previous; //break the node, create the link between previous and current
+            //move ahead
+            previous=current; 
+            current=n; 
+        }
+        return previous; //the head at final
+    }
+};
+// T=O(N), S=O(1)
+
+
+/////////////////////////////////////////////////
+/////Remove kth Node from End of Linked List/////
+/// Process:
+// find the length of the LL: n
+// find the kth node from the end: (i=n-k+1)th node from the front.
+// do i-1 iteration jumps reach at the kth node
+// Traverse the linked list twice. But only once traversal is allowed.
+
+///Another Way, Process:
+// 1.Find out the desired kth node
+  // take 2 pointers(One and Two) initially both locate at head of the linked list.
+  // make pointer Two takes k jumps. Hence, the distance between One & Two=k nodes
+  // move One and Two ahead simultaneously
+  // once pointer Two moves at NULL, One pointer reach at kth node.
+// 2. Remove kth node
+  // when One comes to (k-1)th node and Two comes to the last node of the linked list, create the link between (k-1)th and (k+1)th nodes.
+  // kth node is removed automatically
+
+/// LeetCode.19  https://leetcode.com/problems/remove-nth-node-from-end-of-list/
+class Solution {
+public:
+    ListNode* removeNthFromEnd(ListNode* head, int k) {
+        ListNode *One=head;
+        ListNode *Two=head;
+
+        while(k--!=NULL){ //pointer Two first jumps k times 
+            Two=Two->next;
+        }
+        // check for the special case first
+        if(Two==NULL){//ListNode.length=k -->delete the first node
+            return One->next;  //pointer one jumps 1 unit
+        }
+        //move ahead
+        while(Two->next!=NULL){
+            One=One->next;
+            Two=Two->next;
+        }
+        //delete kth node from the end by creating the new link
+        One->next=One->next->next; //still a memory leak
+        return head;
+    }
+};
+
+
+//////////////////////////////////////
+/////Merge Two Sorted Linked List/////
+/// Process: Without creating any new nodes, we only change the connection.
+// comparing the first node of the linked list1 and the first node of the linked list2-->find the final head
+// compare the larger first node of one linked list with the second node of another linked list.
+// make the new connection with head and another linked list's first node.
+// move ahead...
+// if one linked list first reach at NULL, connect with the last node of this linked list with remaining part of another linked list.
+
+///LeetCode.21 https://leetcode.com/problems/merge-two-sorted-lists/
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2) {
+        if(l1==NULL) return l2;
+        if(l2==NULL) return l1;
+
+        ListNode *finalHead=NULL; //initialize, find out the head of merged linked list
+        //comparison
+        if(l1->val<l2->val){
+            finalHead=l1;
+            l1=l1->next; //move ahead
+        }else{
+            finalHead=l2;
+            l2=l2->next; //move ahead
+        }
+        // create a new pointer to form the merged linked list.
+        ListNode *finalTail=finalHead;//initialize
+        while(l1 && l2){
+            if(l1->val<l2->val){
+                finalTail->next=l1; //inserting a tail
+                l1=l1->next; //move ahead
+            }else{
+                finalTail->next=l2; 
+                l2=l2->next;
+            }
+            finalTail=finalTail->next; //update the pointer
+        }
+        //if l2==NULL
+        if(l1){
+            finalTail->next=l1;
+        }else{ //if l1==NULL
+            finalTail->next=l2;
+        }
+        return finalHead;
+    }
+};
+// T=O(m+n), S=O(1)
+
+
+/////////////////////////////////////////////////
+/////Merge Two Sorted Linked List(recursion)/////
+class Solution{
+public:
+    ListNode* mergeTwoLists(ListNode* l1, ListNode* l2){
+        // base case
+        if(l1==NULL) return l2;
+        if(l2==NULL) return l1;
+        // Recursive case
+        ListNode *newHead=NULL; //initialize
+        if(l1->val<l2->val){
+            newHead=l1;
+            newHead->next=mergeTwoLists(l1->next, l2);
+        }else{
+            newHead=l2;
+            newHead->next=mergeTwoLists(l2->next, l1);
+        }
+        return newHead;
+    }   
+};
+
