@@ -348,3 +348,87 @@ public:
     }   
 };
 
+
+//////////////////////////////////
+////Merge Sort on Linked List/////
+/// Process:
+// find the mid using slow and fast pointers approach, break the linked list into two parts
+// apply merge sort into two sub-linked lists by recursion
+// use the functions that merge two sorted linked list we have mentioned above
+/// LeetCode 148  https://leetcode.com/problems/sort-list/
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
+class Solution{
+public:
+  //  just copy from above
+   ListNode* mergeTwoLists(ListNode* a, ListNode* b) {
+        if(a==NULL) return b;
+        if(b==NULL) return a;
+        
+        ListNode* newHead = NULL;
+        if(a->val < b->val){
+            newHead = a;
+            newHead ->next = mergeTwoLists(a->next, b);
+        }else{
+            newHead = b;
+            newHead->next = mergeTwoLists(a,b->next);
+        }
+        return newHead;
+    }
+
+    ListNode* sortList(ListNode* head) {
+        // base case: 0 node and 1 node
+        if(head==NULL || head->next==NULL) return head;
+        // break list into two halves, find the mid first
+        // initialize slow and fast pointers
+        ListNode *slow=head;
+        ListNode *fast=head->next;
+        // move ahead
+        while(fast!=NULL && fast->next!=NULL){
+            slow=slow->next;
+            fast=fast->next->next;
+        }
+        // store the address, n is the first node after the breaking point
+        ListNode *n=slow->next;
+        // break into two sub-linked lists
+        slow->next=NULL;
+        // call the sort function into both of parts and store them
+        ListNode *a=sortList(head);
+        ListNode *b=sortList(n);
+
+        // merge the two sorted halves, call the function
+        head=mergeTwoLists(a,b); 
+        return head;
+    }
+};
+// T=O(nlogn)
+
+
+///////////////////////////////////
+/////Variations of Linked list/////
+///// Doubly linked list
+// reference:https://www.geeksforgeeks.org/introduction-and-insertion-in-a-doubly-linked-list/
+// the drawback of single linked list: can only move in the forward direction, we can only store the address of next node, not store the address of previous node
+// The features of doubly linked list: we can move backward and forward. We can store the previous address as well.
+// the backwards of doubly linked list: it requires more memory
+
+/////Circular Single Linked List
+// reference: https://www.geeksforgeeks.org/circular-linked-list/?ref=lbp
+// the link direction is only forward, and the last node has connection with the first node, (last node stores the address of first node) without any NULL values.
+// advantage: 
+  // do not need to maintain the head pointer any more.
+  // The circular singly linked list has no beginning or end.
+// We can count the length of circular linked list by a temp pointer moving ahead until next-of-temp reaches at the beginning position.
+// insert problem: T=O(N), first find out the last node, make the new connection between the inserted node and last node, the original link is automatically broken.
+
+/////Circular Doubly Linked List
+// any two consecutive elements are linked(includes the last and first nodes)
+
