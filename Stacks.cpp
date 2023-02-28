@@ -216,3 +216,175 @@ int main(){
 // 0
 
 
+///////////////////
+/////Templates/////
+// use templates to avoid copy and paste repeatedly if the only thing needed to do is to change the data type, by passing data type as a parameter
+// Two keywords: `template<typename T>`. The second one can be replaced by `class`.
+// Format: T x; means x is a variable of type T.
+//Function Templates: write a generic function that can be used for different data types. 
+// we can pass more than one data type as arguments to templates.
+// we can specify default arguments to templates
+template<typename T> //without semicolon
+class Pair{
+  private:
+    T x;
+    T y;
+
+  public: //setter and getter for private area
+    void setX(T x){
+      this->x=x;
+    }
+    T getX(){
+      return x;
+    }
+    void setY(T y){
+      this->y=y;
+    }
+    T getY(){
+      return y;
+    }
+};
+
+int main(){
+  Pair<int> p1; //in p1, all of datatypes are int.
+  p1.setX(1);
+  p1.setY(2);
+  cout<<p1.getX()<<" "<<p1.getY()<<endl;
+
+  Pair<double> p2; //in p1, all of datatypes are double.
+  p2.setX(1.25);
+  p2.setY(2.22);
+  cout<<p2.getX()<<" "<<p2.getY()<<endl;
+ 
+  return 0;
+}
+// return:
+// 1 2
+// 1.25 2.22
+
+// If we want to set up two variables with different dataTypes, one template typename is not enough. In this case, we need to add one more typename in our template.
+template<typename T, typename V>
+class Pair{
+  private:
+    T x;
+    V y;
+
+  public: //setter and getter for private area
+    void setX(T x){
+      this->x=x;
+    }
+    T getX(){
+      return x;
+    }
+    void setY(V y){
+      this->y=y;
+    }
+    V getY(){
+      return y;
+    }
+};
+
+int main(){
+  Pair<int,char> p3; 
+  p3.setX(5);
+  p3.setY('E');
+  cout<<p3.getX()<<" "<<p3.getY()<<endl;
+ 
+  return 0;
+}
+// return:
+// 5 E
+
+// Special case: Pair in Pair(Triplet)
+// if one element in pair contains two elements(actual this element is a pair),how to define and print it.
+// But we cannot use second level of nesting any more.
+int main(){
+  Pair<Pair<int,int>,int> p4;
+  p4.setY(30);
+  Pair<int,int> temp;
+  temp.setX(10);
+  temp.setY(20);
+  p4.setX(temp);
+  cout<<p4.getX().getX()<<" "<<p4.getX().getY()<<" "<<p4.getY()<<endl;
+
+  return 0;
+}
+// return:
+// 10 20 30
+
+
+///////////////////////////////
+/////Stack using Templates/////
+// to create generic class
+template<typename T>
+class Stack{
+   T *arr; //we need to change all arr related datatype to T.
+   int nextIndex; //has to be integer
+   int capacity; //has to be integer
+
+   public:
+       Stack(){
+          capacity = 4;
+          arr = new T[capacity];
+          nextIndex = 0;
+       }
+       int size(){
+          return nextIndex;
+       }
+       bool isEmpty(){
+         return nextIndex==0;
+       }
+       void push(T element){
+          if(nextIndex==capacity){
+            T *newArr = new T[2*capacity];
+            for(int i=0;i<capacity;i++){
+                newArr[i] = arr[i];
+            }
+            delete []arr;
+            arr = newArr;
+            capacity = 2*capacity;
+          }
+          arr[nextIndex] = element;
+          nextIndex++;
+       }
+       void pop(){
+          if(isEmpty()){
+            cout<<"Stack empty"<<endl;
+            return;
+          }
+          nextIndex--;
+       }
+       T top(){
+         if(isEmpty()){
+            cout<<"Stack empty"<<endl;
+            return 0; //change -1 to 0
+          }
+         return arr[nextIndex-1];
+       }
+};
+
+int main(){
+  Stack<char> s;
+  s.push(100);
+  s.push(101);
+  s.push(102);
+  s.push(103);
+  s.push(104);
+
+  cout<<s.top()<<endl;
+  s.pop();
+  cout<<s.top()<<endl;
+  s.pop();
+  cout<<s.top()<<endl;
+  s.pop();
+  cout<<s.size()<<endl;
+  cout<<s.isEmpty()<<endl;
+
+  return 0;
+}
+// return
+// h
+// g
+// f
+// 2
+// 0
