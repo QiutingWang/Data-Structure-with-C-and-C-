@@ -388,3 +388,176 @@ int main(){
 // f
 // 2
 // 0
+
+
+/////////////////////////////////
+/////Stack using Linked List/////
+// references: https://www.geeksforgeeks.org/implement-a-stack-using-singly-linked-list/
+// every function T=O(1)
+// Mostly, we use single linked list. LIFO. First node on the top of stack. `Last node` of linked list represents `bottom` of the stack.
+// `Insert at head` is only allowed in stack using linked list.
+// Advantage of using linked list: it is possible to implement a stack that can shrink or grow as much as needed, without capacity limit.
+
+template <typename T> //this line code should be written above any class which we going to use template
+class node{ //make it as generic class for any data type by Templates
+  public:
+    T data;
+    node<T> *next; //add a pointer
+    node(T data){  //initialization
+      this->data=data;
+      next=NULL;
+    }
+};
+
+template <typename T>
+class stack{
+  private:
+    node<T> *head;
+    int size;
+
+  public:
+    stack(){ //initialize
+      head=NULL;
+      size=0;
+    }
+    int getSize(){
+      return size;
+    }
+    bool isEmpty(){
+      return size==0; //check the size is empty or not
+    }
+    void push(T element){
+      node<T> *n=new node<T>(element); //create a new node with template
+      n->next=head; //create the connection between original head and insert element
+      head=n; //update head
+      size++; //update size
+    }
+    void pop(){ //remove the top most element
+      if(isEmpty()){ //check if the stack is null
+        cout<<"Stack empty"<<endl;
+        return;
+      }
+      node<T> *temp=head; //create a new temp at head
+      head=head->next; //move the head to next node, update head
+      temp->next=NULL; //isolation
+      delete temp; //deallocate memory, free the temp node
+      size--; //update size
+    }
+    T top(){
+      if(isEmpty()){ //check if the stack is null
+        cout<<"Stack empty"<<endl;
+        return 0;
+      }
+      return head->data;
+    }
+};
+
+int main(){
+  stack<char> s;
+  s.push(100);
+  s.push(101);
+  s.push(102);
+  s.push(103);
+  s.push(104);
+
+  cout<<s.top()<<endl;
+  s.pop();
+  cout<<s.top()<<endl;
+  s.pop();
+  cout<<s.top()<<endl;
+  s.pop();
+  cout<<s.getSize()<<endl;
+  cout<<s.isEmpty()<<endl;
+  return 0;
+}
+// return
+// h
+// g
+// f
+// 2
+// 0
+
+
+///////////////////////
+/////Inbuilt Stack/////
+// Content: push(), pop(), top(), size(), empty()相对之前的构造方法，expression更加简单
+#include <stack>
+int main(){
+  stack<int> s;
+  s.push(1); //we can push as many elements as we want, without considering the capacity
+  s.push(2);
+  s.push(3);
+  s.push(4);
+  s.push(5);
+  s.push(6);
+
+  cout<<s.top()<<endl;
+  s.pop();
+  cout<<s.top()<<endl;
+  s.pop();
+
+  cout<<s.size()<<endl;
+  cout<<s.empty()<<endl;
+
+  while(!s.empty()){
+    cout<<s.top()<<endl;
+    s.pop();
+  }
+  cout<<s.size()<<endl;
+  return 0;
+}
+// return
+// 6
+// 5
+// 4
+// 0
+// 4
+// 3
+// 2
+// 1
+// 0
+
+
+///////////////////////////////////////////////////////////
+/////Check Balanced Valid Parenthesis with Linked List/////
+// the input is string(6 characters): () {} []
+// Valid parenthesis: opening and closing are matching. 
+// The process of using stack to check:
+  // if `opening` bracket, then push()
+  // if it is `closing`, check whether it is matched with the corresponding opening one. 
+    // if it is matched with opening one, pop() 
+    // if it is not matched, return false
+  // At final, check whether the stack is empty
+    // if the remaining stack is empty, return true
+    // if the remaining stack is not empty, return false
+// T=O(n), S=O(n)
+
+// LeetCode20 https://leetcode.com/problems/valid-parentheses/
+class Solution {
+public:
+    bool isValid(string A) {
+        stack<char> s;
+
+        for(int i=0;i<A.size();i++){
+            if(A[i]=='(' || A[i]=='[' || A[i]=='{'){ //push the opening bracket inside the stack
+                s.push(A[i]);
+            }else{
+                if(s.empty()) return false; //if do not write, it will return running time error
+                // check the ending bracket is matched or not
+                else if(A[i]==')'){
+                    if(s.top()=='(') s.pop();
+                    else return false;
+                }else if(A[i]==']'){
+                    if(s.top()=='[') s.pop();
+                    else return false;
+                }else if(A[i]=='}'){
+                    if(s.top()=='{') s.pop();
+                    else return false;
+                }
+            }
+        }
+        // check whether the string is empty or not
+        if(s.empty()) return true;
+        return false;
+    }
+};
