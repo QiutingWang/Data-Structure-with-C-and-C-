@@ -561,3 +561,126 @@ public:
         return false;
     }
 };
+
+
+///////////////////////////////////////////////////
+/////Evaluate Reverse Polish(postfix) Notation/////
+// references:
+  // https://www.geeksforgeeks.org/stack-set-4-evaluation-postfix-expression/
+  // https://www.cs.colostate.edu/~cs165/.Fall19/recitations/L15/doc/traversal-order.html
+  // https://www.geeksforgeeks.org/convert-infix-expression-to-postfix-expression/
+// three notations:infix, postfix, prefix
+  // postfix notation: Operators are written after pair of operands, evaluated faster than other expressions
+  // infix notation: Operators are written in-between pair of operands
+  // prefix notation: Operators are written before pair of operands.
+// calculation process: change into postfix expression and then evaluate the postfix expression
+  // Conversion: infix->postfix
+    // scan infix from left to right
+    // move the operators to the corresponding closing brackets
+  // Evaluation Rules: Assumption the postfix is valid
+    // We must have two operands for applying operators
+    // in stack: if scanned element is operand, push into stack
+    // if scanned element is operator, pop the `top two elements` in stack, apply the operator, push the calculated `result` in the stack
+    // Finally, our answer is top of stack
+
+// LeetCode No.150 https://leetcode.com/problems/evaluate-reverse-polish-notation/description/
+// with the given postfix 
+class Solution {
+public:
+    int evalRPN(vector<string>& tokens) {
+        stack<int> st;
+        for(int i=0;i<tokens.size();i++){
+            if(tokens[i]=="+" || tokens[i]=="-" || tokens[i]=="*" || tokens[i]=="/"){
+                // two elements
+                int value1=st.top();
+                st.pop();
+                int value2=st.top();
+                st.pop();
+                // perform the operation
+                if(tokens[i]=="+" ){
+                    st.push(value2+value1); //push result to stack
+                }
+                else if(tokens[i]=="-"){
+                    st.push(value2-value1); 
+                }
+                else if(tokens[i]=="*"){
+                    st.push(value2*value1); 
+                }
+                else if(tokens[i]=="/"){
+                    st.push(value2/value1); 
+                }
+            }
+            else{
+                // operands
+                st.push(atoi(tokens[i].c_str())); 
+                //convert the string to integer using inbuilt function: atoi(string) with C-style string as input.
+                //  There are two types of string in C++: C-style (char a[]), string class. 
+                // Hence, we need to convert string s into C-style string first, using function .c_str()
+            }
+        }
+        // finally, it remains only one element in stack, which is our answer
+        return st.top();
+    }
+};
+// T=O(n); S=O(n)
+
+
+//////////////////////////////////////////////////
+/////Remove All Adjacent Duplicates in String/////
+// also delete adjacent duplicates in post-deleted string repeatedly, until we no longer can.有点像开心消消乐
+🟦🟦🟥🟥🟪🟪🟫🟫🟨🟨⬛️⬛️
+// with the help of map, and a stack of characters
+  // if the stack is empty, push
+  // comparison between the top element already in stack and element at index i
+    // if they are not equal, push
+    // if they are equal, pop from stack and move foreword
+  // finally, as soon as reach to the end of the string, the answer is the remaining elements in stack, by pop() every element out of stack, then reverse the string to get the final answer.
+    // as results, every element in final answer string is unique.
+
+// LeetCode No.1047 https://leetcode.com/problems/remove-all-adjacent-duplicates-in-string/
+class Solution {
+public:
+    string removeDuplicates(string A) {
+        stack<char> s;
+        for(int i=0;i<A.size();i++){ //traverse
+            if(s.empty() || A[i]!=s.top()){ //comparison and check whether empty in stack now
+               s.push(A[i]); 
+            }else{
+                s.pop(); //pop and move ahead 
+            }
+        }
+        string ans="";
+        while(!s.empty()){
+            ans.push_back(s.top());
+            s.pop();
+        }
+        reverse(ans.begin(),ans.end()); //give the correct order
+        if(ans.size()==0) return "Empty String";
+        return ans;
+    }
+};
+// T=O(n), S=O(n)
+
+///Optimization with S=O(1)
+// we only need to maintain a top pointer, without reserve the order at final
+class Solution {
+public:
+    string removeDuplicates(string A) {
+        int stringPointer=-1; //create a pointer and initialization, -1 means empty
+        for(int i=0;i<A.size();i++){ //traverse
+            if(stringPointer==-1 || A[i]!=A[stringPointer]){ //comparison and check whether empty in stack now
+               stringPointer++; //move ahead
+               A[stringPointer]=A[i]; //push the element
+            }else{
+                stringPointer--; //delete the element by don't put it into stack
+            }
+        }
+        string ans=""; 
+        for(int i=0;i<=stringPointer;i++){
+            ans.push_back(A[i]); //put the final answer in string
+        }
+        return ans;
+    }
+};
+// T=O(n)
+
