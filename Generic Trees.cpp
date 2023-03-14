@@ -208,3 +208,230 @@ int main(){
 // 2: 
 // 3:
 
+
+//////////////////////////////
+/////Take Input Recursive/////
+TreeNode<int>* takeInput(){
+  int rootData;
+  cout<<"Enter data"<<endl;
+  cin>>rootData;
+
+  TreeNode<int>* root=new TreeNode<int>(rootData); //build the constructor
+  //get the number of children
+  int n;
+  cout<<"Enter number of children of "<<rootData<<endl;
+  cin>>n;
+  // call the recursion, the leaf nodes are acting as base case
+  for(int i=1;i<=n;i++){ //call the recursion as many as the number of children
+    TreeNode<int>* child=takeInput(); //the takeInput function will return root pointer to the main, store the address of children
+    root->children.push_back(child); //pass the address, make connection, store the address of children to root
+  }
+  return root;
+}
+
+int main(){
+  TreeNode<int>* root=takeInput();
+  printTree(root);
+  return 0;
+}
+// return
+// Enter data
+// 1
+// Enter number of children of 1
+// 3
+// Enter data
+// 2
+// Enter number of children of 2
+// 2
+// Enter data
+// 5
+// Enter number of children of 5
+// 0
+// Enter data
+// 6
+// Enter number of children of 6
+// 0
+// Enter data
+// 3
+// Enter number of children of 3
+// 1
+// Enter data
+// 7
+// Enter number of children of 7
+// 0
+// Enter data
+// 4
+// Enter number of children of 4
+// 1
+// Enter data
+// 8
+// Enter number of children of 8
+// 0
+// 1: 2 ,3 ,4 ,
+// 2: 5 ,6 ,
+// 5: 
+// 6: 
+// 3: 7 ,
+// 7: 
+// 4: 8 ,
+// 8: 
+
+
+///////////////////////////////
+/////Take Input Level Wise/////
+// with a Queue DS here, for constructing the tree, `create` the node->`push` the node whose value from queue->`connect` the node->remove the original element in queue
+// iterative, but not recursive
+#include <queue>
+
+TreeNode<int>* takeInputLevelWise(){
+  int rootData;
+  cout<<"Enter root data"<<endl;
+  cin>>rootData;
+
+  // create node
+  TreeNode<int>* root=new TreeNode<int>(rootData);
+  // create the queue, which stores the complete nodes
+  queue<TreeNode<int>*> q;
+  q.push(root); //push inside queue
+  while(!q.empty()){
+    TreeNode<int>* f=q.front(); //store the front element in queue in f 
+    q.pop(); //remove this element from queue
+
+    // check how many children of its parent
+    cout<<"Enter # of children of "<<f->data<<endl;
+    int n;
+    cin>>n; //type the # of children
+
+    // use loop to take input of elements in the same level
+    for(int i=1; i<=n;i++){
+      int childData;
+      cout<<"Enter "<<i<<" th child of "<<f->data<<endl;
+      cin>>childData;
+
+      // create the node
+      TreeNode<int>* child=new TreeNode<int>(childData);
+      // push
+      q.push(child);
+      // make the connection with its parent
+      f->children.push_back(child);
+    }
+  }
+  return root;
+}
+
+int main(){
+  TreeNode<int>* root=takeInputLevelWise();
+  printTree(root);
+  return 0;
+}
+// return
+// Enter root data
+// 1
+// Enter # of children of 1
+// 3
+// Enter 1 th child of 1
+// 2
+// Enter 2 th child of 1
+// 3
+// Enter 3 th child of 1
+// 4
+// Enter # of children of 2
+// 2
+// Enter 1 th child of 2
+// 5
+// Enter 2 th child of 2
+// 6
+// Enter # of children of 3
+// 1
+// Enter 1 th child of 3
+// 7
+// Enter # of children of 4
+// 1
+// Enter 1 th child of 4
+// 8
+// Enter # of children of 5
+// 0
+// Enter # of children of 6
+// 0
+// Enter # of children of 7
+// 0
+// Enter # of children of 8
+// 0
+// 1: 2 ,3 ,4 ,
+// 2: 5 ,6 ,
+// 5: 
+// 6: 
+// 3: 7 ,
+// 7: 
+// 4: 8 ,
+// 8: 
+
+
+///////////////////////////
+/////Level Order Print/////
+// create and connect the node process are not needed, push is the only need
+void printTreeLevelWise(TreeNode<int>* root){
+     queue<TreeNode<int>*> q;
+     q.push(root);
+     while(!q.empty()){
+        TreeNode<int>* f = q.front();
+        q.pop();
+
+        cout<<f->data<<": ";
+        for(int i=0;i<f->children.size();i++){
+           cout<<f->children[i]->data<<" ,";
+         }
+        cout<<endl;
+
+        for(int i=0;i<f->children.size();i++){
+            q.push(f->children[i]);
+        }
+     }
+}
+
+int main(){
+  TreeNode<int>* root=takeInputLevelWise();
+  printTreeLevelWise(root);
+  return 0;
+}
+// return
+// Enter root data
+// 1
+// Enter # of children of 1
+// 3
+// Enter 1 th child of 1
+// 2
+// Enter 2 th child of 1
+// 3
+// Enter 3 th child of 1
+// 4
+// Enter # of children of 2
+// 2
+// Enter 1 th child of 2
+// 5
+// Enter 2 th child of 2
+// 6
+// Enter # of children of 3
+// 1
+// Enter 1 th child of 3
+// 7
+// Enter # of children of 4
+// 1
+// Enter 1 th child of 4
+// 8
+// Enter # of children of 5
+// 0
+// Enter # of children of 6
+// 0
+// Enter # of children of 7
+// 0
+// Enter # of children of 8
+// 0
+// 1: 2 ,3 ,4 ,
+// 2: 5 ,6 ,
+// 3: 7 ,
+// 4: 8 ,
+// 5: 
+// 6: 
+// 7: 
+// 8: 
