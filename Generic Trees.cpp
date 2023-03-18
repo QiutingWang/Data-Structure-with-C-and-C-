@@ -435,3 +435,205 @@ int main(){
 // 6: 
 // 7: 
 // 8: 
+
+
+//////////////////////
+/////Count Nodes/////
+// call the recursion on the trees which start from the child of root, then return the nodes numbers to the root, then sum up the sub-trees' nodes' amount+1(root node)
+// only the extra codes are shown below
+int countNodes(TreeNode<int>* root){ //create a pointer node
+  if(root==NULL){ //special case
+    return 0;
+  }
+  int ans=1; //root number
+  for(int i=0;i<root->children.size();i++){ //call the recursion
+    ans+=countNodes(root->children[i]);
+  } 
+  return ans;
+}
+
+int main(){
+  TreeNode<int>* root=takeInputLevelWise();
+  cout<<countNodes(root)<<endl;
+  return 0;
+}
+// return(the type and input are the same as ahead)
+// 8
+
+
+/////////////////////////
+/////Hight of a Tree/////
+// ie: find the number of level
+// find the height of all the children, get the maximum  +1(root)
+int height(TreeNode<int>* root){
+  if(root==NULL){ //special case
+    return 0;
+  }
+
+  int maxHeight=0; //initialization
+  for(int i=0;i<root->children.size();i++){ //call the recursion with loop
+    /*int childHeight=height(root->children[i]);
+
+    if(childHeight>maxHeight){
+      maxHeight=childHeight; //update the maxHeight
+    }*/
+    // optimization, use max inbuilt function
+    maxHeight=max(maxHeight,height(root->children[i]));
+  }
+  return maxHeight+1;
+}
+
+int main(){
+  TreeNode<int>* root=takeInputLevelWise();
+  cout<<height(root)<<endl;
+  return 0;
+}
+// return:
+// Enter root data
+// 1
+// Enter # of children of 1
+// 3
+// Enter 1 th child of 1
+// 2
+// Enter 2 th child of 1
+// 3
+// Enter 3 th child of 1
+// 4
+// Enter # of children of 2
+// 0
+// Enter # of children of 3
+// 1
+// Enter 1 th child of 3
+// 5
+// Enter # of children of 4
+// 0
+// Enter # of children of 5
+// 1
+// Enter 1 th child of 5
+// 6
+// Enter # of children of 6
+// 0
+// 4
+
+
+////////////////////////////////////
+/////Print all Nodes at Level K/////
+// level 1,2,... counts from the child nodes' nearest distance from the root node to furthest from the root node
+void printNodeAtLevelK(TreeNode<int>* root, int K){
+  if(root==NULL){ //special case
+    return;
+  }
+  if(K==0){
+    cout<<root->data<<endl; //only print root and return, no children nodes
+    return;
+  }
+  for(int i=0;i<root->children.size();i++){ //call the recursion
+    printNodeAtLevelK(root->children[i], K-1);
+  }
+}
+
+int main(){
+  TreeNode<int>* root=takeInputLevelWise();
+  printNodeAtLevelK(root,2);
+  return 0;
+}
+//return
+// Enter root data
+// 1
+// Enter # of children of 1
+// 3
+// Enter 1 th child of 1
+// 2
+// Enter 2 th child of 1
+// 3
+// Enter 3 th child of 1
+// 4
+// Enter # of children of 2
+// 2
+// Enter 1 th child of 2
+// 5
+// Enter 2 th child of 2
+// 6
+// Enter # of children of 3
+// 1
+// Enter 1 th child of 3
+// 7
+// Enter # of children of 4
+// 0
+// Enter # of children of 5
+// 0
+// Enter # of children of 6
+// 0
+// Enter # of children of 7
+// 0
+// 5
+// 6
+// 7 
+
+
+/////////////////////////
+/////Count Leaf Node/////
+// call the recursion count the leaf nodes in the sub-trees, then add up together
+int countLeafNodes(TreeNode<int>* root){
+  if(root==NULL){ //special case
+    return 0;
+  }
+  if(root->children.size()==0){ //with no children,only the root node
+    return 1;
+  }
+  int ans=0; //initialization
+  for(int i=0;i<root->children.size();i++){ //call the recursion
+    ans+=countLeafNodes(root->children[i]); //update the answer
+  }
+  return ans;
+}
+
+int main(){
+  TreeNode<int>* root=takeInputLevelWise();
+  printTreeLevelWise(root);
+  countLeafNodes(root);
+  cout<<"Total Nodes "<<countNodes(root)<<endl;
+  cout<<"Height "<<height(root)<<endl;
+  cout<<"Nodes at Level 2"<<endl;
+  printNodeAtLevelK(root,2);
+  cout<<"Numbers of leaf nodes "<<countLeafNodes(root)<<endl;
+  return 0;
+}
+// return
+// Enter root data
+// 1 3 2 3 4 2 5 6 2 7 8 0 0 0 0 1 9 0
+
+// Enter # of children of 1
+// Enter 1 th child of 1
+// Enter 2 th child of 1
+// Enter 3 th child of 1
+// Enter # of children of 2
+// Enter 1 th child of 2
+// Enter 2 th child of 2
+// Enter # of children of 3
+// Enter 1 th child of 3
+// Enter 2 th child of 3
+// Enter # of children of 4
+// Enter # of children of 5
+// Enter # of children of 6
+// Enter # of children of 7
+// Enter # of children of 8
+// Enter 1 th child of 8
+// Enter # of children of 9
+// 1: 2 ,3 ,4 ,
+// 2: 5 ,6 ,
+// 3: 7 ,8 ,
+// 4: 
+// 5: 
+// 6: 
+// 7: 
+// 8: 9 ,
+// 9: 
+// Total Nodes 9
+// Height 4
+// Nodes at Level 2
+// 5
+// 6
+// 7
+// 8
+// Numbers of leaf nodes 5
