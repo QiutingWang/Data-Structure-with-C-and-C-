@@ -637,3 +637,126 @@ int main(){
 // 7
 // 8
 // Numbers of leaf nodes 5
+
+
+////////////////////////////
+/////PreOrder Traversal/////
+// Tree Traversals (Inorder, Preorder and Postorder) reference: https://www.geeksforgeeks.org/tree-traversals-inorder-preorder-and-postorder/
+// first print root, then print children, from the left to right using recursion
+// T=O(n)
+// usage: use to create a copy of tree, and to get prefix expressions on an expression tree
+void PreOrderTraversal(TreeNode<int>* root){
+  if(root==NULL){
+    return;
+  }
+  cout<<root->data<<" "<<endl;
+  for(int i=0;i<root->children.size();i++){
+    PreOrderTraversal(root->children[i]);
+  }
+}
+
+int main(){
+  TreeNode<int>* root=takeInputLevelWise();
+  cout<<"PreOrder Traversal "<<endl;
+  PreOrderTraversal(root);
+  return 0;
+}
+// return
+// Enter root data
+// 1 3 2 3 4 2 5 6 2 7 8 0 0 0 0 1 9 0
+// PreOrder Traversal 
+// 1 
+// 2 
+// 5 
+// 6 
+// 3 
+// 7 
+// 8 
+// 9 
+// 4 
+
+
+/////////////////////////////
+/////PostOrder Traversal/////
+// first print the children from left to right using recursion, then print the node
+// Usage: to delete the tree, or get the postfix expression of an expression tree
+// T=O(n)
+void PostOrderTraversal(TreeNode<int>* root){
+  if(root==NULL){
+    return;
+  }
+  for(int i=0;i<root->children.size();i++){
+    PostOrderTraversal(root->children[i]);
+  }
+  cout<<root->data<<" "<<endl; //just need to move this line of code below
+}
+
+int main(){
+  TreeNode<int>* root=takeInputLevelWise();
+  cout<<"PostOrder Traversal "<<endl;
+  PostOrderTraversal(root);
+  return 0;
+}
+// return
+// Enter root data
+// 1 3 2 3 4 2 5 6 2 7 8 0 0 0 0 1 9 0
+// PostOrder Traversal 
+// 5 
+// 6 
+// 2 
+// 7 
+// 9 
+// 8 
+// 3 
+// 4 
+// 1 
+
+
+/////////////////////
+/////Delete Tree/////
+// The reason why we need to delete tree: deallocate the memory, when construct nodes dynamically, we need to delete old trees manually
+// procedure: first delete children, then delete root
+// the coding logic is very similar to PostOrder Traversal.
+void deleteTree(TreeNode<int>* root){
+  if(root==NULL){
+    return;
+  }
+  for(int i=0;i<root->children.size();i++){
+    deleteTree(root->children[i]);
+  }
+  delete root;
+}
+
+int main(){
+  TreeNode<int>* root=takeInputLevelWise();
+  deleteTree(root);
+  return 0;
+}
+
+
+////////////////////
+/////Destructor/////
+// the second way to delete a tree, a non-recursive one
+// reference: Deleting a binary tree using the delete keyword. https://stackoverflow.com/users/19248408/wangqiuting?tab=profile
+// first go the destructor, execute, then delete the specific node
+template<typename T>
+class TreeNode{
+  public:
+    T data;
+    vector<TreeNode<T>*> children; //constructor create node dynamically
+    TreeNode(T data){
+      this->data=data;
+    }
+    // the destructor in TreeNode class
+    ~TreeNode(){
+      for(int i=0;i<children.size();i++){
+        delete children[i];
+      }
+    }
+};
+
+int main(){
+  TreeNode<int>* root=takeInputLevelWise();
+  delete root;
+  return 0;
+}
