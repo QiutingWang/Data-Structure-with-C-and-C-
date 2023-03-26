@@ -199,3 +199,167 @@ int main(){
 // 6: 
 // 7: 
 
+
+///////////////////////////////
+/////Level Order Traversal/////
+///Procedure:
+// use queue, check the root, left side, right side exist or not
+// if exists push the node inside the queue, pop the element, print the value
+  // after finish pushing the elements in the same level, we push NULL in the queue
+  // when print the elements as a binary tree, as soon as we meet a NULL, we start from a new line
+  // In conclusion, NULL is used to differentiate between levels.
+// when the queue is empty, stop execution
+
+// LeetCode No.102 https://leetcode.com/problems/binary-tree-level-order-traversal/
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    vector<vector<int>> levelOrder(TreeNode* root) {
+        vector<vector<int> > v; //create the vector
+        if(root==NULL){
+            return v; //now v is empty
+        }
+        vector<int> temp; //to store the result of current level
+        // create a queue, push root level elements
+        queue<TreeNode*> q;
+        q.push(root);
+        q.push(NULL);
+
+        while(!q.empty()){
+            TreeNode* f=q.front();  //create a pointer variable
+            q.pop(); //remove the element
+
+            if(f==NULL){
+                //cout<<endl; write in a new line
+                v.push_back(temp);
+                temp.clear(); //update to make temp empty
+                if(!q.empty()){
+                    q.push(NULL);
+                }
+            }else{ //print out the value
+                temp.push_back(f->val); //left side
+                if(f->left!=NULL){
+                    q.push(f->left);
+                }
+                if(f->right!=NULL){  //right side
+                    q.push(f->right);
+                }
+            }
+        }
+        return v;
+    }
+};
+// T=O(N); S=O(N)
+
+
+/////////////////////
+/////Count Nodes/////
+// Procedure: 
+// answer=# of nodes present in left + # of nodes present in right + root(1)
+// call the count recursion with left sub-trees and right sub-trees
+// basic case: if the root is NULL;
+
+// LeetCode No.222 https://leetcode.com/problems/count-complete-tree-nodes/
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int countNodes(TreeNode* root) {
+        // base case
+        if(root==NULL){
+            return 0;
+        }
+        // recursive case
+        return countNodes(root->left)+countNodes(root->right)+1;
+    }
+};
+// T=O(N); S=O(N) 
+
+
+///////////////////////////
+/////InOrder Traversal/////
+// Rule: for every node use recursion, visit left side sub-tree->current root data->right side sub-tree (LDR)
+
+// LeetCode No.94 https://leetcode.com/problems/binary-tree-inorder-traversal/
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    void InOrder(TreeNode* root, vector<int> &ans){ //pass by reference, change are permanent
+        if(root==NULL) return ;
+
+        InOrder(root->left, ans);
+        ans.push_back(root->val);
+        InOrder(root->right, ans);
+    }
+    vector<int> inorderTraversal(TreeNode* root) {
+        // create a vector
+        vector<int> ans;
+        InOrder(root, ans);
+        return ans;
+    }
+};
+// T=O(N); S=O(N)
+
+
+////////////////////////////
+/////PreOrder Traversal/////
+// Rule: for every node, D->L->R
+
+// LeetCode No.144 https://leetcode.com/problems/binary-tree-preorder-traversal/
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    void PreOrder(TreeNode* root, vector<int> &ans){
+        if(root==NULL) return ;
+
+        ans.push_back(root->val);
+        PreOrder(root->left, ans);
+        PreOrder(root->right, ans);
+    }
+
+    vector<int> preorderTraversal(TreeNode* root) {
+        vector<int> ans;
+        PreOrder(root, ans);
+        return ans;
+    }
+};
+// T=O(N); S=O(N);
