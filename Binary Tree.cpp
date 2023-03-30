@@ -363,3 +363,231 @@ public:
     }
 };
 // T=O(N); S=O(N);
+
+
+//////////////////////////////////
+/////Max Depth of Binary Tree/////
+// `Height` of Binary Tree: find the farthest node from the root, recursing from left to right subtree->count the number of nodes between them with root node(+1)
+
+// LeetCode No.104 Maximum Depth of Binary Tree  https://leetcode.com/problems/maximum-depth-of-binary-tree/
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int maxDepth(TreeNode* root) {
+        if(root==NULL) return 0;
+        //recursion
+        int left=maxDepth(root->left);
+        int right=maxDepth(root->right);
+
+        return max(left,right)+1;
+    }
+};
+// T=O(N), S=O(N)
+
+
+///////////////////////////////
+/////Symmetric Binary Tree/////
+// task: to check whether it is a symmetric tree or not
+// Procedure:
+  // Draw a median vertical line
+  // compare the strucure(Distance) and value of left and right side sub-trees, details as follow:
+    // T1 root value=T2 root value
+    // T1 left=T2 left
+    // T1 right=T2 left
+    // ...take recursion
+
+// LeetCode No.101 https://leetcode.com/problems/symmetric-tree/
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    bool helper(TreeNode* leftTree, TreeNode* rightTree){
+        // compare the two trees
+        // some special cases
+        if(leftTree==NULL && rightTree!=NULL) return false;
+        if(rightTree==NULL && leftTree!=NULL) return false;
+        if(leftTree==NULL && rightTree==NULL) return true;
+        // this line of code must be put at final, because of avoiding the running time error.
+        if(leftTree->val != rightTree->val) return false;
+        // recursion case
+        return helper(leftTree->left, rightTree->right) && helper(leftTree->right, rightTree->left);
+    }
+    bool isSymmetric(TreeNode* root) {
+        if(root==NULL) return true;
+        return helper(root->left, root->right);
+    }
+};
+
+
+///////////////////
+/////Find Node/////
+// Task: Given a binary tree and given a key, we need to find whether value is in this tree
+// recursively searching the right and left sub-trees, if the value=key, then the key exists.
+bool searchNode(BTNode<int>* root, int key){
+  // base case
+  if(root==NULL) return false;
+  if(root->data==key){
+    return true;
+  }
+  // recursive case
+  return (searchNode(root->left, key) || searchNode(root->right, key));
+}
+
+int main(){
+  BTNode<int>* root=takeInputLevelWise();
+  printTree(root);
+
+  cout<<"Searching for 8"<<endl;
+  if(searchNode(root,8)){
+    cout<<"Found"<<endl;
+  }else{
+    cout<<"Not Present"<<endl;
+  }
+  delete root;
+  return 0;
+}
+// return:
+// Enter Root Data: 
+// 1 2 3 4 5 6 7 -1 -1 -1 -1 8 9 -1 -1 -1 -1 -1 -1
+
+// 1: L2R3
+// 2: L4R5
+// 4: 
+// 5: 
+// 3: L6R7
+// 6: L8R9
+// 8: 
+// 9: 
+// 7: 
+// Searching for 8
+// Found
+
+
+///////////////////
+/////Min Value/////
+// Reference: INT_MAX and INT_MIN in C/C++ and Applications: https://www.geeksforgeeks.org/int_max-int_min-cc-applications/
+#include <climits>
+
+int minValue(BTNode<int>* root){
+  if(root==NULL){
+    return INT_MAX; //specifies that an integer variable cannot store any value beyond this limit.
+  }
+  int leftMin=minValue(root->left); //give the minimum value of left side tree with recursion
+  int rightMin=minValue(root->right);
+  // comparison of these 2 values and root
+  return min(root->data, min(leftMin, rightMin));
+}
+
+int main(){
+  BTNode<int>* root=takeInputLevelWise();
+  printTree(root);
+  cout<<"Min Value: "<<minValue(root)<<endl;
+  delete root;
+  return 0;
+}
+// return:
+// Enter Root Data: 
+// 1 2 3 4 5 6 7 -1 -1 -1 -1 8 9 -1 -1 -1 -1 -1 -1
+
+// 1: L2R3
+// 2: L4R5
+// 4: 
+// 5: 
+// 3: L6R7
+// 6: L8R9
+// 8: 
+// 9: 
+// 7: 
+// Min Value: 1
+
+/////Another way:
+void minValue1(BTNode<int>* root, int &ans){
+  if(root==NULL){
+    return ; 
+  }
+  ans=min(ans, root->data);
+  minValue1(root->left, ans);
+  minValue1(root->right, ans);
+}
+
+int main(){
+  BTNode<int>* root=takeInputLevelWise();
+  printTree(root);
+
+  cout<<"Min Value using Another Way: ";
+  int minimumValue=INT_MAX;
+  minValue1(root, minimumValue); //update
+  cout<<minimumValue<<endl;
+
+  delete root;
+  return 0;
+}
+// return:
+// Min Value using Another Way: 1
+
+
+///////////////////
+/////Max Value/////
+// Similar to find Min Value!
+int maxValue(BTNode<int>* root){
+  if(root==NULL){
+    return INT_MIN; //specifies that an integer variable cannot store any value below this limit
+  }
+  int leftMax=maxValue(root->left); 
+  int rightMax=maxValue(root->right);
+  return max(root->data, max(leftMax, rightMax));
+}
+
+int main(){
+  BTNode<int>* root=takeInputLevelWise();
+  printTree(root);
+  cout<<"Max Value: "<<maxValue(root)<<endl;
+  delete root;
+  return 0;
+}
+// return
+// Max Value: 9
+
+
+//////////////////////////////
+/////🍃Count Leaf Nodes🍃/////
+int countLeafNode(BTNode<int>* root){
+  // base case
+  if(root==NULL){
+    return 0;
+  }
+  if(root->left==NULL && root->right==NULL){
+    return 1;
+  }
+  // recursive case
+  return countLeafNode(root->left)+countLeafNode(root->right);
+}
+
+int main(){
+  BTNode<int>* root=takeInputLevelWise();
+  printTree(root);
+  cout<<"Number of Leaf Nodes: "<<countLeafNode(root)<<endl;
+  delete root;
+  return 0;
+}
+// return:
+// Number of Leaf Nodes: 5
