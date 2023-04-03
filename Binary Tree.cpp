@@ -591,3 +591,129 @@ int main(){
 }
 // return:
 // Number of Leaf Nodes: 5
+
+
+//////////////////////////////////////////////////////////////
+/////Construct Tree from PreOrder and InOrder Traversal🤯/////
+// The necessity to use two kinds of Traversals: if we only required to construct tree using InOrder method, the results are not unique. Adding another traversal method helps us get the `unique tree` at final.
+// Procedure: construct the root, build left sub-tree recursively, build right sub-tree recursively
+  // 🌟left sub-tree construction: leftInOrderStart(=InOrderStart) index, leftInOrderEnd(=RootIndex-1) index, leftPreOrderStart(=PreOrderStart+1) index, leftPreOrderEnd(=lInE-lInS+lPreS) index are needed.
+    // Explanation: leftInOrderEnd Index - leftInOrderStart Index= leftPreOrderEnd Index - leftPreOrderStart Index
+  // 🌟Similarly, right sub-tree construction: rightInOrderStart(=RootIndex+1) index, rightInOrderEnd(=InOrderEnd) index, rightPreOrderStart(=leftPreOrderEnd+1) index, rightPreOrderEnd(=PreOrderEnd) index are needed.
+
+// LeetCode No.105 https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* buildTreeHelper(vector<int>& InOrderTraversal, vector<int>& PreOrderTraversal, int InOrderStart, int InOrderEnd, int PreOrderStart, int PreOrderEnd){
+        // Base case, empty
+        if(InOrderStart>InOrderEnd || PreOrderStart>PreOrderEnd){
+            return NULL;
+        }
+        // define the root data
+        int rootData=PreOrderTraversal[PreOrderStart]; //initialization, passing PreOrderStart
+        // find root index with no duplicates assumption by traversing
+        int rootIndex=-1; //initialization
+        for(int i=InOrderStart;i<=InOrderEnd; i++){
+            if(InOrderTraversal[i]==rootData){
+                rootIndex=i;
+                break;
+            }
+        }
+        // find out the leaf values
+        int leftInOrderStart=InOrderStart;
+        int leftInOrderEnd=rootIndex-1;
+        int leftPreOrderStart=PreOrderStart+1;
+        int leftPreOrderEnd=leftInOrderEnd - leftInOrderStart + leftPreOrderStart;
+
+        int rightInOrderStart=rootIndex+1;
+        int rightInOrderEnd=InOrderEnd;
+        int rightPreOrderStart=leftPreOrderEnd+1;
+        int rightPreOrderEnd=PreOrderEnd;
+
+        // construct root node
+        TreeNode* root=new TreeNode(rootData); //pass the root data
+        // Call the recursion on left sub-tree and right sub-tree
+        root->left=buildTreeHelper(InOrderTraversal, PreOrderTraversal, leftInOrderStart, leftInOrderEnd, leftPreOrderStart, leftPreOrderEnd);
+        root->right=buildTreeHelper(InOrderTraversal, PreOrderTraversal, rightInOrderStart, rightInOrderEnd, rightPreOrderStart, rightPreOrderEnd);
+        return root;
+    }
+
+    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+        // find the total number of elements
+        int n=inorder.size();
+        // call the function
+        return buildTreeHelper(inorder, preorder, 0, n-1, 0, n-1);
+    }
+};
+
+
+/////////////////////////////////////////////////////////////
+/////Construct Tree from PostOrder and InOrder Traversal/////
+// 🌟left sub-tree construction: InOrderStart(=InOrderStart) index, leftInOrderEnd(=RootIndex-1) index, leftPostOrderStart(=PostOrderStart) index, leftPostOrderEnd(=lInE-lInS+lPostS) index are needed.
+// 🌟Similarly, right sub-tree construction: rightInOrderStart(=RootIndex+1) index, rightInOrderEnd(=InOrderEnd) index, rightPostOrderStart(=leftPostOrderEnd+1) index, rightPostOrderEnd(=PostOrderEnd-1) index are needed.
+
+// LeetCode No.106 https://leetcode.com/problems/construct-binary-tree-from-inorder-and-postorder-traversal/
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* buildTreeHelper(vector<int>& InOrderTraversal, vector<int>& PostOrderTraversal, int InOrderStart, int InOrderEnd, int PostOrderStart, int PostOrderEnd){
+        // Base case, empty
+        if(InOrderStart>InOrderEnd || PostOrderStart>PostOrderEnd){
+            return NULL;
+        }
+        // define the root data
+        int rootData=PostOrderTraversal[PostOrderEnd]; 
+        // find root index with no duplicates assumption by traversing
+        int rootIndex=-1; //initialization
+        for(int i=InOrderStart;i<=InOrderEnd; i++){
+            if(InOrderTraversal[i]==rootData){
+                rootIndex=i;
+                break;
+            }
+        }
+        // find out the leaf values
+        int leftInOrderStart=InOrderStart;
+        int leftInOrderEnd=rootIndex-1;
+        int leftPostOrderStart=PostOrderStart;
+        int leftPostOrderEnd=leftInOrderEnd - leftInOrderStart + leftPostOrderStart;
+
+        int rightInOrderStart=rootIndex+1;
+        int rightInOrderEnd=InOrderEnd;
+        int rightPostOrderStart=leftPostOrderEnd+1;
+        int rightPostOrderEnd=PostOrderEnd-1;
+
+        // construct root node
+        TreeNode* root=new TreeNode(rootData); //pass the root data
+        // Call the recursion on left sub-tree and right sub-tree
+        root->left=buildTreeHelper(InOrderTraversal, PostOrderTraversal, leftInOrderStart, leftInOrderEnd, leftPostOrderStart, leftPostOrderEnd);
+        root->right=buildTreeHelper(InOrderTraversal, PostOrderTraversal, rightInOrderStart, rightInOrderEnd, rightPostOrderStart, rightPostOrderEnd);
+        return root;
+    }
+
+    TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
+        int n=inorder.size(); //or the same as int n=postorder.size()
+        return buildTreeHelper(inorder, postorder, 0, n-1, 0, n-1);
+    }
+};
+
