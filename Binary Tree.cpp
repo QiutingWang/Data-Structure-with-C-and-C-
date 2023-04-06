@@ -717,3 +717,138 @@ public:
     }
 };
 
+
+/////////////////////////////////
+/////Diameter of Binary Tree/////
+// Diameter: the maximum distance between one node and another
+  // Option1: the diameter=distance between the most left bottom node and the most right bottom node
+    // the diameter not has to pass the root node
+  // Option2: the diameter=distance between the most left bottom node and the most right bottom node both in left sub-tree
+  // Option3: the diameter=distance between the most left bottom node and the most right bottom node both in right sub-tree
+
+// LeetCode 543 https://leetcode.com/problems/diameter-of-binary-tree/
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    int height(TreeNode* root){
+        if(root==NULL){
+            return 0;
+        }
+        return 1+max(height(root->left),height(root->right));
+    }
+    
+    int diameterOfBinaryTree(TreeNode* root) {
+        if(root==NULL){
+            return 0;
+        }
+        int option1=height(root->left)+height(root->right);
+        int option2=diameterOfBinaryTree(root->left); //call the recursion
+        int option3=diameterOfBinaryTree(root->right);
+        return max(option1, max(option2, option3));
+    }
+};
+// T=O(N^height), at worst, T=O(N^2)
+
+
+/////Optimization Approach with two variables
+  // Hight=1+max(leftHight, rightHeight)
+  // Diameter=max(leftHeight+rightHeight, leftDiameter, rightDiameter)
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    pair<int, int> heightDiameter(TreeNode* root){
+        // basic case
+        if(root==NULL){
+            pair<int, int> p;
+            p.first=0;
+            p.second=0;
+            return p;
+        }
+        // initialization, call the recursion
+        pair<int,int> leftAns=heightDiameter(root->left);
+        pair<int, int> rightAns=heightDiameter(root->right);
+        // create variables
+        int lh=leftAns.first;
+        int ld=leftAns.second;
+        int rh=rightAns.first;
+        int rd=rightAns.second;
+
+        // find out the overall height
+        int height=1+max(lh,rh);
+        int diameter=max(lh+rh, max(ld,rd));
+        // create the pair to store the results
+        pair<int, int> p;
+        p.first=height;
+        p.second=diameter;
+        return p;
+    }
+
+    int diameterOfBinaryTree(TreeNode* root) {
+        pair<int, int> p=heightDiameter(root); //call the function
+        return p.second;
+    }
+};
+// T=O(N)
+
+
+///////////////////////////
+/////Root to Node Path/////
+// print the path which is stored in a vector
+bool getPath(BTNode* root, int value, vector<int> &ans){ //pass by reference, printing inside the main
+  // basic case
+  if(root==NULL){
+    return false;
+  }
+  ans.push_back(root->data);
+  if(root->data==value){
+    return True;
+  }
+  // call the recursion on sub-trees
+  bool left=getPath(root->left, value, ans);
+  bool right=getPath(root->right, value, ans);
+
+  if(left || right){ //if left is true or right is true, the path can be found
+    return True;
+  }
+  // else:
+  ans.pop_back(); //remove the elements from vector
+  return false;
+}
+
+int main(){
+  BTNode<int>* root=takeInputLevelWise();
+  printTree(root);
+
+  vector<int> v;
+  if(getPath(root, 9, v)){ //given value presents
+    for(int i=0;i<v.size();i++){
+      cout<<v[i]<<" ";
+    }
+    else{
+      cout<<"No Path Found"<<endl;
+    }
+  };
+  delete root;
+  return 0;
+}
+
