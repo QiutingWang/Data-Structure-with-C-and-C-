@@ -156,7 +156,330 @@ public:
 };
 
 
+//////////////////////////////////
+/////BST Class Implementation/////
+// Copy the code from binary tree node
+template<typename T>
+class BTNode{
+  public: 
+    T data;
+    BTNode* left;
+    BTNode* right;
+    BTNode(T data){
+      this->data=data;
+      left=NULL;
+      right=NULL;
+    }
+    ~BTNode(){
+      delete left;
+      delete right;
+    }
+};
+
+class Pair{ //include the final head and final tail
+    public:
+      BTNode<int>* head;
+      BTNode<int>* tail;
+};
+
+class BST{
+    // copy from Binary Tree Document
+    BTNode<int>* root; //create a root node based on Binary Tree node class
+    
+    void printTree(BTNode<int>* root){
+        if(root==NULL){ //base case for binary tree
+        return;
+    }
+      cout<<root->data<<": ";
+      if(root->left!=NULL){
+          cout<<"L"<<root->left->data;
+          }
+      if(root->right!=NULL){
+          cout<<"R"<<root->right->data;
+          }
+      cout<<endl;
+    
+      printTree(root->left);
+      printTree(root->right);
+    }
+
+    bool hasData(BTNode<int>* node, int data){
+        // base case
+        if(node==NULL){
+            return false;
+        }
+        if(node->data==data){
+            return true;
+        }
+        // recursive case
+        if(node->data > data){
+            return hasData(node->left, data);
+        }else{
+            return hasData(node->right, data);
+        }     
+    }
+
+/////Insert Procedure:(with recursion)
+// root node create first
+// create another node with value, comparing with root node value, deciding which side to put
+// return the newly created node to root, make the connection with root node
+    BTNode<int>* insert(BTNode<int>* node, int data){
+        // base case
+        if(node==NULL){ //initialize value is NULL, it will be updated later
+            BTNode<int>* n=new BTNode<int>(data); //create the node and pass the value
+            return n;
+        }
+        // recursive case
+        if(data < node->data){
+            node->left=insert(node->left, data); //insert the node in left sub-tree and make the connection 
+        }else{
+            node->right=insert(node->right, data); //insert the node in right sub-tree and make the connection 
+        }
+        return node;
+    }
+
+/////Delete Procedure:
+// search or reach the target node is present or not
+// if exists(3 cases):
+  // 1. if the target node is leaf node, we delete it and return `NULL` to its parent node
+  // 2. if the target node has children in left/right sub-tree, we delete it and return its sub-tree node(s) to its parent node
+  // 🌟 3. if the target node has children both situated in left and right sub-trees, we delete the target node, combining its right and left sub-trees by finding the replacement of the target node.
+    // replacement can be: (still cohere the binary search tree traits)
+      // the maximum node value of left sub-tree;
+      // OR the minimum node value of right sub-tree
+  // con't: then call the recursion of the sub-tree which the replacement node originally located in, delete the original replacement node. 
+    BTNode<int>* deleteData(BTNode<int>* node, int data){
+        // base case
+        if(node==NULL){
+            return NULL;
+        }
+        // recursion case
+        if(data > node->data){
+            node->right=deleteData(node->right, data); //update the right sub-tree
+        }else if(data < node->data){
+            node->left=deleteData(node->left, data);
+        }else{       // data == node->data, reach at the target node
+            // base case, leaf node
+            if(node->left==NULL && node->right==NULL){
+                delete node;
+                return NULL;
+            }else if(node->right==NULL){
+                // second case
+                // first store target node's sub-tree in temporary node
+                // isolation the target node
+                // delete the target node
+                BTNode<int>* temp=node->left;
+                node->left=NULL;
+                delete node;
+                return temp;
+            }else if(node->left==NULL){
+                BTNode<int>* temp=node->right;
+                node->right=NULL;
+                delete node;
+                return temp;
+            }else{
+                // 🌟third case
+                BTNode<int>* minNode=node->right; //create the node
+                while(minNode->left != NULL){
+                    minNode=minNode->left; //move left most in right sub-tree and update it
+                }
+                int rightMin=minNode->data; //find out the data
+                node->data=rightMin; //replace the node with right minimum value
+                // call the recursion and make connection
+                node->right=deleteData(node->right, rightMin);
+            }
+        }
+        return node;
+    }
+
+    Pair convert2LL(BTNode<int>* root){
+        if(root==NULL){
+            Pair ans;
+            ans.head=NULL;
+            ans.tail=NULL;
+            return ans;
+        }
+        if(root->left==NULL && root->right==NULL){ //case1
+            Pair p; //create a pair
+            p.head=root;
+            p.tail=root;
+            return p;
+        }else if(root->left !=NULL && root->right==NULL){ //case2
+            Pair leftLL=convert2LL(root->left);  //call the recursion, the subtree is converted into a linked list
+            leftLL.tail->right=root; // make the connection 
+            Pair ans; //create a pair
+            ans.head=leftLL.head;
+            ans.tail=root;  
+            return ans;
+        }else if(root->right !=NULL && root->left==NULL){ //case3
+            Pair rightLL=convert2LL(root->right);  //call the recursion, the subtree is converted into a linked list
+            root->right=rightLL.head; // make the connection 
+            Pair ans; //create a pair
+            ans.head=root;
+            ans.tail=rightLL.tail;  
+            return ans;
+        }else{ //case4
+            // call the recursions
+            Pair leftLL=convert2LL(root->left);
+            Pair rightLL=convert2LL(root->right);
+            // make connections
+            leftLL.tail->right=root;
+            root->right=rightLL.head;
+            Pair ans;
+            ans.head=leftLL.head;
+            ans.tail=rightLL.tail;
+            return ans;
+        }
+    }
+
+    public:
+    // build the constructor
+      BST(){
+        root=NULL;
+      }
+      ~BST(){
+        delete root;
+      }
+      void deleteData(int data){
+        root=deleteData(root, data);
+      }
+      void insert(int data){
+        root=insert(root, data);
+      }
+      bool hasData(int data){
+        return hasData(root, data); //call the private function
+      }
+      void print(){
+        printTree(root);
+      }
+      BTNode<int>* convert2LL(){
+        Pair p=convert2LL(root);
+        return p.head;
+      }
+};
+
+int main(){
+    BST b;
+    b.insert(10);
+    b.insert(8);
+    b.insert(22);
+    b.insert(4);
+    b.insert(17);
+    b.insert(5);
+    b.insert(46);
+
+    b.print();
+
+    BTNode<int>* head=b.convert2LL();
+    BTNode<int>* temp2=head;
+    while(temp2!=NULL){
+        cout<<temp2->data<<"→";
+        temp2=temp2->right; //move ahead
+    }
+
+    /*int data;
+    cin>>data;
+    cout<<b.hasData(data)<<endl;
+
+    b.deleteData(10);
+    cout<<endl;
+    b.print();
+
+    b.deleteData(4);
+    cout<<endl;
+    b.print();
+
+    b.deleteData(100); //data doesn't exist
+    cout<<endl;
+    b.print();
+    
+    cout<<"deleting 4"<<endl; //case2
+    b.deleteData(4);
+    cout<<endl;
+    b.print();
+
+    cout<<"deleting 46"<<endl; //case3
+    b.deleteData(46);
+    cout<<endl;
+    b.print();*/
+
+    return 0;
+}
+// return:
+// 10: L8R22
+// 8: L4
+// 4: R5
+// 5: 
+// 22: L17R46
+// 17: 
+// 46:
+
+// 17 //search the data we need to type in the target
+// 1
+
+// 17: L8R22
+// 8: L4
+// 4: R5
+// 5: 
+// 22: R46
+// 46: 
+
+// 17: L8R22
+// 8: L5
+// 5: 
+// 22: R46
+// 46: 
+
+// 17: L8R22
+// 8: L5
+// 5: 
+// 22: R46
+// 46:
+// deleting 4
+
+// 17: L8R22
+// 8: L5
+// 5: 
+// 22: R46
+// 46: 
+// deleting 46
+
+// 17: L8R22
+// 8: L5
+// 5: 
+// 22: 
+
+// 10: L8R22
+// 8: L4
+// 4: R5
+// 5: 
+// 22: L17R46
+// 17: 
+// 46:
+
+// 4→5→8→10→17→22→46
 
 
 
+//////////////////////////////////////////////////
+/////Convert BST to Sorted Singly Linked List/////
+// we are not creating new node, instead we just change the pointers from left&right to next.
+
+/// Procedures:
+//Method1: less time complexity
+  // first call the recursion with left sub-tree and right sub-tree separately, correspondingly, it returns 2 sorted linked lists, with 4 values: leftHead & leftTail, rightHead & rightTail
+  // to make connection between these two sorted linked lists, we need to connect leftTail, root node, and  rightHead nodes.
+
+//Method2: more time complexity owing to traversal to find the leftTail value
+  //the same as previous method, except it only required to return 2 values: leftHead & rightHead
+  // we need to traversal the left sorted linked list with pointer to find out leftTail value, then make the connection with root node.
+
+/// Possible Cases:
+// 1. both right and left sub-trees are NULL
+// 2. right sub-tree is NULL, left sub-tree exists(left LL+node)
+// 3. left sub-tree is NULL, right sub-tree exists(node+right LL)
+// 4. both right and left sub-tree exist(left LL+ root +right LL)
+
+
+// Codes are in above class implementation part.
 
