@@ -483,3 +483,27 @@ int main(){
 
 // Codes are in above class implementation part.
 
+
+///////////////////////////////
+/////Types of Balanced BST/////
+// reference: Self-Balancing Binary Search Trees https://www.geeksforgeeks.org/self-balancing-binary-search-trees/
+
+/// Definition and features: 
+  // automatically keep the height as small as possible
+  // all operations ie:insert, delete, search, T=O(logN), which is nearly H
+
+/// Types:
+  // AVL Tree: for every node, |left sub-tree Height-right sub-tree Height|<=1
+  // Red Black Tree: 
+    // every node is colored with either red or black. 
+    // The root and leaf nodes are always marked as black.
+    // the children of each red node are black
+    // all leaves have the same black depth
+    // every simple path from the root to descendant leaf node have the same number of black nodes.
+  // Splay Tree:
+    // bring the most recently accessed or inserted element to the root, by performing a sequence of tree rotations
+    // zip or zap rotation
+
+/// Self-Balancing Method:
+// left rotation or right rotation
+// reference: Self-Balancing Binary Search Trees 101  https://towardsdatascience.com/self-balancing-binary-search-trees-101-fc4f51199e1d
