@@ -244,3 +244,187 @@ int main(){
 
 // 5
 // Doris
+
+
+//////////////////////////////////////
+/////Bucket Array & Hash Function/////
+// references: https://en.wikipedia.org/wiki/Hash_function
+/////Implement Hash Map using Hash Table
+// in hash map, store and access both require constant time O(1), with (key,value) of `array` called bucket array. The process: 
+  // convert the key(can be string, integer, bool...) into an integer, pass key in hash function, then return a practical integer.
+  // store the key and value got from hash function(treated as `index`) in bucket array.
+  // when we input the index, it can return the corresponding key-value pair
+
+// Hash Function: 
+  // Hash Code: it can return any integer
+    //types: sum of ASCII, EBCDIC, MD5, or SHA1 values. Taking care of permutation issues, we only consider the sum of first three characters
+    // if the original key is string, we can pass by their `addresses` as input, then convert into integer with hash code
+  // Compression Function: convert into `fixed-size valid index`
+    // given requirement of XX% bucket size, then the valid index range is [0,XX-1].
+// What is a good hash function?
+  // computationally and storage space-efficient form of data access
+  // give us a uniformity distribution with `huge range of integer`
+
+// What if there are multiple keys will come to the same index?-->Collision
+
+
+////////////////////////////
+/////Collision Handling/////
+// 2 Types of collision handling techniques:
+  // Closed Hashing:
+    // Separate Chaining: 
+      // construct a `linked list` after the corresponding index, to store the multiple keys.
+      // each `bucket` will be the `head` of the linked list. Hence, multiple keys will present in that index
+  // Open Addressing:
+    // a key pass through the `hash function` which will give an index
+      //there is an `empty` index, no key-value pair stored<--`store` the key here
+      // if it is not empty, we have to find `alternative index` for storing key-value pair
+        // h_i(k)=hashFunction(k)+f(i), where i: ith attempt for finding the index, k: key, hashFunction(k): original index
+          // basic case: f(i)=0, when i=0 store in original index
+          // different f(i) is different addressing technique
+            // 1. Linear Probing(LP): f(i)=i, take the jump of 1: 0,1,2,3,4,... HashFunction=hashFunction(k)+i%N;
+            // 2. Quadratic Probing(QP): f(i)=i^2. HashFunction=hashFunction(k)+(i^2)%N; take the jump at index of 0,1,4,9,16,...
+          // Quadratic probing is better. Because Linear Probing will incur clustering problem. With QP, we will have a good distribution with a larger range.
+            // 3. Double Hashing: use two hash functions for reducing conflicts. HF1(k)+HK2(k)
+
+
+/////////////////////////
+/////Implementation/////
+/////Destructor:
+// instance member function invoked automatically whenever an object will be destroyed.
+// has the same name as class name, preceded by a ~
+// number of destructor<=1
+// it releases memory space occupied by objects created by constructor
+
+template<typename V>
+class MapNode{
+  public:
+    string key;
+    V value;
+    MapNode *next;
+    //constructor
+    MapNode(string key, V value){
+      this->key=key;
+      this->value=value;
+      next=NULL;
+    }
+    //destructor
+    ~MapNode(){
+      delete next; //all the recursive linked list will be destroyed 
+    }
+};
+
+template<typename V>
+class myMap{
+  private:
+    MapNode<V>** buckets; //call the constructor
+    int count;
+    int numBuckets;
+
+    int getBucketIndex(string key){
+      //calculate hash code,initialization, iterate from tail to head
+      // eg: abc->ap^2+bp^1+cp^0. The larger p, the value is increasing faster, being out of range.
+      int hashCode=0;
+      int base=1;   //base=p^0
+      int p=37;
+      for(int i=key.size()-1;i>=0;i--){
+        hashCode += key[i]*base; //sum up 
+        base = base*p; //update
+        //apply the percentage buckets, keep our value ranges smaller
+        hashCode=hashCode%numBuckets;
+        base=base%numBuckets;
+      }
+      return hashCode%numBuckets;
+    }
+  public:
+    myMap(){
+      count=0;
+      numBuckets=5;
+      buckets=new MapNode<V>*[numBuckets];
+      for(int i=0;i<numBuckets;i++){
+        buckets[i]=NULL;
+      }
+    }
+    ~myMap(){ //we need to delete the linked lists first, then delete bucket array elements recursively
+      for(int i=0;i<numBuckets;i++){
+        delete bucket[i];
+      }
+      delete []buckets;
+    }
+    /////Define operation functions
+    int size(){
+      return count;
+    }
+
+    V getValue(string key){
+      //initialize the key and pass the value to head pointer
+      int bucketIndex=getBucketIndex(key); 
+      MapNode<V>* head=buckets[bucketIndex];
+      //iterate the linked list to find out the key
+      while(head!=NULL){
+        if(head->key==key){
+          return head->value;
+        }
+        head=head->next;
+      }
+      return 0; //the given key is not present
+    }
+
+    void insert(string key, V value){
+      int bucketIndex=getBucketIndex(key); //call the function to find out index of bucket array
+      MapNode<V>* head=buckets[bucketIndex]; //pass the bucket index value to newly created linked list head index
+      //traverse the linked list
+      while(head!=NULL){ //if the given key is present
+        if(head->key==key){ //check the given key is present or not
+          head->value=value; //update the value
+          return; //directly return
+        }
+        head=head->next; //move ahead 
+      }
+      //if the given key is not present, we need to create a node, insert at the head, and unlink the original head
+      MapNode<V>* node=new MapNode<V>(key, value); //call the constructor to create a new node
+      node->next=buckets[bucketIndex]; //make the new connection
+      buckets[bucketIndex]=node; //update the head
+      count++;
+    }
+///Delete: 
+//iterate the linked list to find out the key we want to delete
+//take previous & current pointers to finish delete operation(break the original link and create new link)
+    V remove(string key){
+      //find the bucket index
+      int bucketIndex=getBucketIndex(key);
+      MapNode<V>* head=buckets[bucketIndex];
+      MapNode<V>* previous=NULL; //initialize the previous pointer
+
+      while(head!=NULL){
+        if(head->key==key){ //delete the head only
+          if(previous==NULL){ //check the previous value is empty or not
+            buckets[bucketIndex]=head->next; //move ahead the pointer to update the bucket index
+          }else{
+            previous->next=head->next; //destroy the original link and create a new link
+          }
+          V value=head->value; //store the value before deleting
+          head->next=NULL; //isolate the node
+          delete head;
+          count--;
+          return value;
+        }
+        previous=head;
+        head=head->next; //update
+      }
+      return 0; //default value indicates given key is not present
+    }
+};
+
+
+/////Time Complexity&Load Factor
+//insert: on average, T=O(n/b), where n: numbers of entities; b: bucket size; n/b: load factor
+  // n/b<threshold, usually we set threshold=0.7 or 0.65... Hence, T<O(1)≈O(1)
+  // how to ensure the threshold is always valid? 
+    // Solution: `increase b` to adjust the range fill into the desired one, called Rehashing. Normally, we double b.
+// delete and search also take constant time O(1).
+
+
+/////////////////////////////
+/////Rehashing Implement/////
+
