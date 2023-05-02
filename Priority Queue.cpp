@@ -339,3 +339,60 @@ int main(){
 // return
 // 14 10 5
 // T≈O(N), S=O(k)≈O(1)
+
+/////Another method using min priority queue
+void KSmallest2(int *a, int n, int k){
+  priority_queue<int , vector<int> , greater<int> > pq;
+  for(int i=0; i<n; i++){
+    pq.push(a[i]); //push all elements into queue
+  }
+  //pop k smallest elements
+  for(int i=1;i<=k;i++){
+    cout<<pq.top()<<" ";
+    pq.pop();
+  }
+}
+
+int main(){
+  int a[]={14, 126, 55, 96, 32, 10, 5};
+  KSmallest2(a,7,3);
+  return 0;
+}
+// return
+// 5 10 14 
+
+//For finding K smallest elements, max priority queue gains the smallest time complexity 
+//For finding K largest elements, min priority queue method gains the smallest time complexity
+
+
+////////////////////////////////////
+/////Inbuilt Min Priority Queue/////
+// format: `priority_queue <int, vector<int>, greater<int>> pq`;
+// multiply the value with -1, using max heap to get min heap
+int main(){
+  priority_queue<int , vector<int> , greater<int> > pq;
+  pq.push(14);
+  pq.push(126);
+  pq.push(55);
+  pq.push(96);
+  pq.push(32);
+  pq.push(10);
+  pq.push(5);
+  cout<<"Size: "<<pq.size()<<endl;
+  cout<<"Top: "<<pq.top()<<endl; //return the root element
+  while(!pq.empty()){
+    cout<<pq.top()<<endl;
+    pq.pop(); //print the maximum element then delete it
+  }
+  return 0;
+}
+// return
+// Size: 7
+// Top: 5
+// 5
+// 10
+// 14
+// 32
+// 55
+// 96
+// 126
