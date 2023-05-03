@@ -174,5 +174,127 @@ int main(){
 // 3
 
 
+/////////////////////////////////////////////
+/////Minimum Steps to 1 Bottom Up Method/////
+// the answer will be store in element at nth index in the array dp[n]
+//dp[i]: the minimum steps needed to move from i to 1
+int minSteps3(int n){
+  //create and base case
+  int *dp=new int[n+1];
+  dp[0]=0;
+  dp[1]=0;
+
+  for(int i=2;i<=n; i++){
+    int operation1=dp[i-1];
+    int operation2=INT_MAX;
+    int operation3=INT_MAX; 
+    if(i%2==0){
+      operation2=dp[i/2];
+    }
+    if(i%3==0){
+      operation3=dp[i/3];
+    }
+    dp[i]=min(operation1,min(operation2,operation3))+1;
+  }
+  int ans = dp[n];
+  delete []dp;
+  return ans;
+}
+
+int main(){
+  int n;
+  cin>>n;
+  cout<<minSteps3(n)<<endl;
+  return 0;
+}
+// return 
+// 7
+// 3
+
+// T=O(N), S=O(N)
+///another writing syntax:
+int minSteps3(int n){
+  int *dp=new int[n+1];
+  dp[0]=0;
+  dp[1]=0;
+
+  for(int i=2;i<=n; i++){
+    dp[i]=dp[i-1]+1;
+    if(i%2==0){
+      dp[i]=min(dp[i],dp[i/2]+1); //compare the current minimum steps with dp[i/2]
+    }
+    if(i%3==0){
+      dp[i]=min(dp[i],dp[i/3]+1);
+    }
+  }
+  int ans = dp[n];
+  delete []dp;
+  return ans;
+}
 
 
+/////////////////////////
+/////Climbing Stairs/////
+// LeetCode No.70 https://leetcode.com/problems/climbing-stairs/
+///// Recursive Approach
+class Solution {
+public:
+    int countSteps(int n){
+        if(n==0||n==1){
+            return 1;
+        }
+        return countSteps(n-1)+countSteps(n-2);
+    }
+    int climbStairs(int n) {
+        return countSteps(n);
+    }
+};
+
+
+/////DP, only jump of 1 or jump of 2
+class Solution {
+public:
+    int countSteps(int n){
+        if(n==0||n==1){
+            return 1;
+        }
+        return countSteps(n-1)+countSteps(n-2);
+    }
+    int climbStairs(int n) {
+      //store in a newly created array
+        int dp[n+1];
+        dp[0]=1;
+        dp[1]=1;
+        for(int i=2; i<=n; i++){
+            dp[i]=dp[i-1]+dp[i-2];
+        }
+        return dp[n];
+    }
+};
+
+
+/////DP Generalized, we can take jump of 1,2,...,or k steps at one time
+class Solution {
+public: 
+    int countSteps(int n){
+        if(n==0 || n==1){
+            return 1;
+        }
+        return countSteps(n-1) + countSteps(n-2);
+    }   
+    int climbStairs(int n) {
+        int k = 2;
+        int dp[n+1];
+        dp[0] = 1;
+        for(int i=1;i<=n;i++){
+            int ans = 0;
+            for(int j=1; j<=k; j++){ //j means jump unit, which maximum unit is k.
+                if(i-j>=0){
+                  ans += dp[i-j];
+                }
+            }
+            dp[i] = ans;
+        }
+        return dp[n]; 
+    }
+};
