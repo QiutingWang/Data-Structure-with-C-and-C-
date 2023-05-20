@@ -259,3 +259,18 @@ int main(){
 // 6
 // 7
 
+
+/////////////////////////////////////////////////////
+/////DFS(BFS) to Find No. of Connected Component/////
+void DFSConnected(vector<vector<int> > matrix){    /////void BFSConnected(vector<vector<int> > matrix){
+  int vertices=matrix.size();
+  vector<bool> visited(vertices, false);
+  int count=0;
+  for(int i=0; i<vertices; i++){
+    if(visited[i]==false){ 
+      count++;  // the number of time we call the DFSPrint=number of connected components
+      DFSPrint(matrix, i, visited); // call the recursion  /////BFSPrint(matrix, i, visited);
+    }
+  }
+  cout<<"Number of Connected Components is "<<count<<endl;
+}
